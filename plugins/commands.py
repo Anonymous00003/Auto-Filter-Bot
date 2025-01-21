@@ -84,8 +84,9 @@ async def start(client:Client, message):
         ],[
             InlineKeyboardButton('🚫 ᴇᴀʀɴ ᴍᴏɴᴇʏ ᴡɪᴛʜ ʙᴏᴛ 🚫', callback_data='earn')
         ]]   
-        reply_markup = InlineKeyboardMarkup(buttons)
-            await message.reply_photo(
+    reply_markup = InlineKeyboardMarkup(buttons)
+        
+        await message.reply_photo(
         photo=START_IMAGE,  # This sends the image
         caption=script.START_TXT.format(message.from_user.mention, get_status(), message.from_user.id),
         reply_markup=reply_markup,
