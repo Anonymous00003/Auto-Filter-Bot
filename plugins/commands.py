@@ -17,6 +17,7 @@ import base64
 
 @Client.on_message(filters.command("start") & filters.incoming)
 async def start(client:Client, message): 
+        START_IMAGE = "https://iili.io/24ePfuR.jpg"  # Replace with your image URL
     m = message
     user_id = m.from_user.id
     if len(m.command) == 2 and m.command[1].startswith('notcopy'):
@@ -82,10 +83,13 @@ async def start(client:Client, message):
             InlineKeyboardButton('🚫 ᴇᴀʀɴ ᴍᴏɴᴇʏ ᴡɪᴛʜ ʙᴏᴛ 🚫', callback_data='earn')
         ]]   
         reply_markup = InlineKeyboardMarkup(buttons)
-        await message.reply_text(script.START_TXT.format(message.from_user.mention, get_status(), message.from_user.id),
-            reply_markup=reply_markup,
-            parse_mode=enums.ParseMode.HTML
-        )
+            await message.reply_photo(
+        photo=START_IMAGE,  # This sends the image
+        caption=script.START_TXT.format(message.from_user.mention, get_status(), message.from_user.id),
+        reply_markup=reply_markup,
+        parse_mode=enums.ParseMode.HTML
+    )
+
         return
 
     if len(message.command) == 2 and message.command[1] in ["subscribe", "error", "okay", "help", "buy_premium"]:
