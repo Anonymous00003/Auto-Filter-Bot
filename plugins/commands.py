@@ -17,7 +17,8 @@ import base64
 
 @Client.on_message(filters.command("start") & filters.incoming)
 async def start(client:Client, message): 
-        START_IMAGE = "https://iili.io/24ePfuR.jpg"  # Replace with your image URL
+    START_IMAGE = "https://iili.io/24ePfuR.jpg"
+        
         
     m = message
     user_id = m.from_user.id
