@@ -22,7 +22,7 @@ API_ID = int(environ.get('API_ID', ''))
 API_HASH = environ.get('API_HASH', '')
 BOT_TOKEN = environ.get('BOT_TOKEN', '')
 ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in environ.get('ADMINS', '1187176420').split()]
-USERNAME = environ.get('USERNAME', 'https://telegram.me/bluedragon340')
+USERNAME = environ.get('USERNAME', 'https://telegram.me/Psycho440_bot')
 LOG_CHANNEL = int(environ.get('LOG_CHANNEL', '-1002465399299'))
 CHANNELS = [int(ch) if id_pattern.search(ch) else ch for ch in environ.get('CHANNELS', '-1002332814498').split()]
 DATABASE_URI = environ.get('DATABASE_URI', "mongodb+srv://gakshay440ag:0cgYavJRABDXiyw8@cluster0.irebe.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
