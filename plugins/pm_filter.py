@@ -704,23 +704,8 @@ async def auto_filter(client, msg, spoll=False):
             **locals()
         )
     else:
-        cap = f"Results for your query: {search}"
-
-        # Stop the timer and calculate elapsed time
-        end_time = time.time()
-        elapsed_time = round(end_time - start_time, 2)  # Time in seconds
-
-        # Add the username and elapsed time to the caption
-        username = message.from_user.username if message.from_user and message.from_user.username else "Unknown User"
-        cap += f"\n\nRequested by: @{username}\nResults provided in: {elapsed_time} seconds."
-
-        # Add auto-delete message if enabled
-    del_msg = (
-    f"\n\n<b>⚠️ ᴛʜɪs ᴍᴇssᴀɢᴇ ᴡɪʟʟ ʙᴇ ᴀᴜᴛᴏ ᴅᴇʟᴇᴛᴇ ᴀꜰᴛᴇʀ <code>{get_readable_time(DELETE_TIME)}</code> "
-    "ᴛᴏ ᴀᴠᴏɪᴅ ᴄᴏᴘʏʀɪɢʜᴛ ɪssᴜᴇs</b>"
-    ) if settings["auto_delete"] else ""
-
-    # Save the caption for tracking
+        cap = f"<b>📂 ʜᴇʀᴇ ɪ ꜰᴏᴜɴᴅ ꜰᴏʀ ʏᴏᴜʀ sᴇᴀʀᴄʜ {search}</b>"
+    del_msg = f"\n\n<b>⚠️ ᴛʜɪs ᴍᴇssᴀɢᴇ ᴡɪʟʟ ʙᴇ ᴀᴜᴛᴏ ᴅᴇʟᴇᴛᴇ ᴀꜰᴛᴇʀ <code>{get_readable_time(DELETE_TIME)}</code> ᴛᴏ ᴀᴠᴏɪᴅ ᴄᴏᴘʏʀɪɢʜᴛ ɪssᴜᴇs</b>" if settings["auto_delete"] else ''
     CAP[key] = cap
     if imdb and imdb.get('poster'):
         try:
