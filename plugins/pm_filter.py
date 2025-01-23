@@ -703,7 +703,19 @@ async def auto_filter(client, msg, spoll=False):
             **locals()
         )
     else:
-        cap = f"<b>📂 ʜᴇʀᴇ ɪ ꜰᴏᴜɴᴅ ꜰᴏʀ ʏᴏᴜʀ sᴇᴀʀᴄʜ {search}</b>"
+        username = message.from_user.username or message.from_user.first_name  # Fetch username or first name
+start_time = time.time()  # Record the start time
+
+# After fetching the file details, replace `filename` dynamically
+filename = file.file_name  # Example: Replace `file.file_name` with your actual file retrieval logic
+time_taken = round(time.time() - start_time, 2)  # Calculate time taken for the search
+
+cap = (
+    f"<b>Requested by: {username}\n"
+    f"Results shown in: {time_taken} seconds\n"
+    f"📂 Here I found for your search: {filename}</b>"
+)
+
     del_msg = f"\n\n<b>⚠️ ᴛʜɪs ᴍᴇssᴀɢᴇ ᴡɪʟʟ ʙᴇ ᴀᴜᴛᴏ ᴅᴇʟᴇᴛᴇ ᴀꜰᴛᴇʀ <code>{get_readable_time(DELETE_TIME)}</code> ᴛᴏ ᴀᴠᴏɪᴅ ᴄᴏᴘʏʀɪɢʜᴛ ɪssᴜᴇs</b>" if settings["auto_delete"] else ''
     CAP[key] = cap
     if imdb and imdb.get('poster'):
