@@ -21,7 +21,7 @@ async def style_buttons(c, m, cb=False):
         reply = await m.reply_text(f"{font(title)}")
         messages.append(reply)
 
-    d=await m.reply_text(text="<b>ʙʏ : @Psycho440_bot</b>")
+    d=await m.reply_text(text="<b>ʙʏ : <a href='https://telegram.me/Psycho440_bot'>ᴘꜱʏᴄʜᴏ</a></b>")
 
     async def delete_messages():
         for msg in messages:
