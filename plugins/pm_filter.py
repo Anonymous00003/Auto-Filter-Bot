@@ -408,15 +408,15 @@ async def cb_handler(client: Client, query: CallbackQuery):
         buttons = [[
             InlineKeyboardButton('⇆ ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ ⇆', url=f'http://telegram.me/{temp.U_NAME}?startgroup=start')
        ],[
-            InlineKeyboardButton('ᴇxᴘʟᴏʀᴇ 🔎', callback_data='features'),
-            InlineKeyboardButton('ᴍᴏᴠɪᴇ ɢʀᴏᴜᴘ 🍿', callback_data='earn')
+            InlineKeyboardButton('ᴇxᴘʟᴏʀᴇ 🔎', callback_data='explore'),
+            InlineKeyboardButton('ᴍᴏᴠɪᴇ ɢʀᴏᴜᴘ 🍿', callback_data='movie_group')
        ],[
             InlineKeyboardButton('✨ ʙᴜʏ sᴜʙsᴄʀɪᴘᴛɪᴏɴs : ʀᴇᴍᴏᴠᴇ ᴀᴅs ✨', callback_data='buy_premium')
        ],[
             InlineKeyboardButton('ғᴇᴀᴛᴜʀᴇs ⚙️', callback_data='features'),
             InlineKeyboardButton('ᴀʙᴏᴜᴛ 📝', callback_data='about')
        ],[
-            InlineKeyboardButton('🔔 ᴊᴏɪɴ ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟs 🔔', callback_data='earn')
+            InlineKeyboardButton('🔔 ᴊᴏɪɴ ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟs 🔔', callback_data='join_update_channel')
        ]]
         reply_markup = InlineKeyboardMarkup(buttons)
         await query.message.edit_text(
