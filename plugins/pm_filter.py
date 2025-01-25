@@ -479,8 +479,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
              parse_mode=enums.ParseMode.HTML
         )
      # Handling the "explore" button click
-     elif query.data == "explore":
-         buttons = [
+    elif query.data == "explore":
+        buttons = [
             [InlineKeyboardButton("ʙᴀᴋ ʀᴜʟᴇ", callback_data="rules")],
             [InlineKeyboardButton("ʙᴀᴋ ᴍᴏᴠɪᴇ", callback_data="movies"), InlineKeyboardButton("ʙᴀᴋ sᴇʀɪᴇs", callback_data="series")],
             [InlineKeyboardButton("ʙᴀᴋ ᴛv sʜᴏᴡs", callback_data="tv_shows"), InlineKeyboardButton("ʙᴀᴋ ᴀɴɪᴍᴇ", callback_data="anime")],
@@ -495,8 +495,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
         )
 
       # Handling the "join update channel" button click
-      elif query.data == "join_update_channel":
-         buttons = [
+    elif query.data == "join_update_channel":
+        buttons = [
             [InlineKeyboardButton("ʙᴀᴋ mᴀɪɴ mᴏᴠɪᴇ ɢʀᴏᴜᴘ", callback_data="main_movie_group")],
             [InlineKeyboardButton("ʙᴀᴋ mᴀɪɴ bᴀᴄᴋᴜᴘ ɢʀᴏᴜᴘ", callback_data="main_backup_channel")],
             [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="start"), InlineKeyboardButton("ʙᴀᴋ ᴄʟᴏsᴇ", callback_data="close")]
@@ -506,9 +506,9 @@ async def cb_handler(client: Client, query: CallbackQuery):
              text="Choose the channel to join:",
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML
-       )
+        )
 
-     elif query.data == "rahul":
+   elif query.data == "rahul":
         buttons = [[
             InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='features')
         ]]
