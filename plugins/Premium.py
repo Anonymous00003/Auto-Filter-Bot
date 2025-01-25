@@ -14,7 +14,7 @@ from pyrogram.errors.exceptions.bad_request_400 import MessageTooLong
 async def add_premium(client, message):
     try:
         _, user_id, time, *custom_message = message.text.split(" ", 3)
-        custom_message = "𝑻𝒉𝒂𝒏𝒌𝒔 𝑭𝒐𝒓 𝑻𝒂𝒌𝒊𝒏𝒈 𝑺𝒖𝒃𝒔𝒄𝒓𝒊𝒑𝒕𝒊𝒐𝒏" if not custom_message else " ".join(custom_message)
+        custom_message = "🙏𝑻𝒉𝒂𝒏𝒌𝒔 𝑭𝒐𝒓 𝑻𝒂𝒌𝒊𝒏𝒈 𝑺𝒖𝒃𝒔𝒄𝒓𝒊𝒑𝒕𝒊𝒐𝒏🙏" if not custom_message else " ".join(custom_message)
         time_zone = datetime.datetime.now(pytz.timezone("Asia/Kolkata"))
         current_time = time_zone.strftime("%d-%m-%Y : %I:%M:%S %p")
         user = await client.get_users(user_id)
