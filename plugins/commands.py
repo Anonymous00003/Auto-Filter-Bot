@@ -79,11 +79,16 @@ async def start(client:Client, message):
        buttons = [[
             InlineKeyboardButton('⇆ ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ ⇆', url=f'http://telegram.me/{temp.U_NAME}?startgroup=start')
        ],[
-            InlineKeyboardButton('ғᴇᴀᴛᴜʀᴇs ⚙️', callback_data='features'),
-            InlineKeyboardButton('ᴘʀᴇᴍɪᴜᴍ 💳', callback_data='buy_premium')
+            InlineKeyboardButton('ᴇxᴘʟᴏʀᴇ 🔎', callback_data='features'),
+            InlineKeyboardButton('ᴍᴏᴠɪᴇ ɢʀᴏᴜᴘ 🍿', callback_data='earn')
        ],[
-            InlineKeyboardButton('ᴇxᴘʟᴏʀᴇ 🕵️', callback_data='earn')
-       ]]   
+            InlineKeyboardButton('✨ ʙᴜʏ sᴜʙsᴄʀɪᴘᴛɪᴏɴs : ʀᴇᴍᴏᴠᴇ ᴀᴅs ✨', callback_data='buy_premium')
+       ],[
+            InlineKeyboardButton('ғᴇᴀᴛᴜʀᴇs ⚙️', callback_data='features'),
+            InlineKeyboardButton('ᴀʙᴏᴜᴛ 📝', callback_data='buy_premium')
+       ],[
+            InlineKeyboardButton('🔔 ᴊᴏɪɴ ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟs 🔔', callback_data='earn')
+       ]]
        reply_markup = InlineKeyboardMarkup(buttons)
        await message.reply_photo(  # This line should be at the same indentation level as the previous lines
            photo=START_IMAGE,  
@@ -107,13 +112,18 @@ async def start(client:Client, message):
             )
             return
         buttons = [[
-            InlineKeyboardButton('⇆ ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ ⇆', url=f'http://t.me/{temp.U_NAME}?startgroup=start')
-        ],[
+            InlineKeyboardButton('⇆ ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ ⇆', url=f'http://telegram.me/{temp.U_NAME}?startgroup=start')
+       ],[
+            InlineKeyboardButton('ᴇxᴘʟᴏʀᴇ 🔎', callback_data='features'),
+            InlineKeyboardButton('ᴍᴏᴠɪᴇ ɢʀᴏᴜᴘ 🍿', callback_data='earn')
+       ],[
+            InlineKeyboardButton('✨ ʙᴜʏ sᴜʙsᴄʀɪᴘᴛɪᴏɴs : ʀᴇᴍᴏᴠᴇ ᴀᴅs ✨', callback_data='buy_premium')
+       ],[
             InlineKeyboardButton('ғᴇᴀᴛᴜʀᴇs ⚙️', callback_data='features'),
-            InlineKeyboardButton('ᴘʀᴇᴍɪᴜᴍ 💳', callback_data='buy_premium')
-        ],[
-            InlineKeyboardButton('ᴇxᴘʟᴏʀᴇ 🕵️', callback_data='earn')
-        ]]
+            InlineKeyboardButton('ᴀʙᴏᴜᴛ 📝', callback_data='buy_premium')
+       ],[
+            InlineKeyboardButton('🔔 ᴊᴏɪɴ ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟs 🔔', callback_data='earn')
+       ]]
         reply_markup = InlineKeyboardMarkup(buttons)
         await message.reply_text(
             text=script.START_TXT.format(message.from_user.mention, get_status(), message.from_user.id),
