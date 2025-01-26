@@ -479,7 +479,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
              parse_mode=enums.ParseMode.HTML
         )
     elif query.data == 'about':
-    await query.message.edit_text(
+        await query.message.edit_text(
         text=script.ABOUT_TEXT.format(query.from_user.mention(), temp.B_LINK),
         reply_markup=InlineKeyboardMarkup(
             [[InlineKeyboardButton('⋞ ʜᴏᴍᴇ', callback_data='start')]]
@@ -490,10 +490,10 @@ async def cb_handler(client: Client, query: CallbackQuery):
      # Handling the "explore" button click
     elif query.data == "explore":
         buttons = [
-            [InlineKeyboardButton("ʙᴀᴋ ʀᴜʟᴇ", callback_data="rules")],
-            [InlineKeyboardButton("ʙᴀᴋ ᴍᴏᴠɪᴇ", callback_data="movies"), InlineKeyboardButton("ʙᴀᴋ sᴇʀɪᴇs", callback_data="series")],
-            [InlineKeyboardButton("ʙᴀᴋ ᴛv sʜᴏᴡs", callback_data="tv_shows"), InlineKeyboardButton("ʙᴀᴋ ᴀɴɪᴍᴇ", callback_data="anime")],
-            [InlineKeyboardButton("ʙᴀᴋ dɪsᴄʟᴀɪᴍᴇʀ", callback_data="disclaimer")],
+            [InlineKeyboardButton("ʀᴜʟᴇs", callback_data="rules")],
+            [InlineKeyboardButton("ᴍᴏᴠɪᴇs", callback_data="movies"), InlineKeyboardButton("ꜱᴇʀɪᴇꜱ", callback_data="series")],
+            [InlineKeyboardButton("ᴛᴠ ꜱʜᴏᴡꜱ", callback_data="tv_shows"), InlineKeyboardButton("ᴀɴɪᴍᴇ", callback_data="anime")],
+            [InlineKeyboardButton("❗ᴅɪꜱᴄʟᴀɪᴍᴇʀ❗", callback_data="disclaimer")],
             [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="start")]  # Or return to another menu
         ]
         reply_markup = InlineKeyboardMarkup(buttons)
@@ -506,9 +506,9 @@ async def cb_handler(client: Client, query: CallbackQuery):
       # Handling the "join update channel" button click
     elif query.data == "join_update_channel":
         buttons = [
-            [InlineKeyboardButton("ʙᴀᴋ mᴀɪɴ mᴏᴠɪᴇ ɢʀᴏᴜᴘ", callback_data="main_movie_group")],
-            [InlineKeyboardButton("ʙᴀᴋ mᴀɪɴ bᴀᴄᴋᴜᴘ ɢʀᴏᴜᴘ", callback_data="main_backup_channel")],
-            [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="start"), InlineKeyboardButton("ʙᴀᴋ ᴄʟᴏsᴇ", callback_data="close")]
+            [InlineKeyboardButton("ᴍᴀɪɴ ᴍᴏᴠɪᴇ ɢʀᴏᴜᴘ", callback_data="main_movie_group")],
+            [InlineKeyboardButton("ᴍᴀɪɴ ʙᴀᴄᴋᴜᴘ ɢʀᴏᴜᴘ", callback_data="main_backup_channel")],
+            [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="start"), InlineKeyboardButton("ᴄʟᴏꜱᴇ", callback_data="close_data")]
         ]
         reply_markup = InlineKeyboardMarkup(buttons)
         await query.message.edit_text(
