@@ -26,46 +26,15 @@ FILES_ID = {}
 CAP = {}
 
 
-# Google Sheets Public CSV URL
-CSV_URL = "https://docs.google.com/spreadsheets/d/1X1ti6NLcAjkEOFmooaLuXUqD7VIf-BX58-g035kZz4A/export?format=csv"
-
-# Function to fetch and paginate data
-def fetch_data_from_sheet(category, page=1, items_per_page=10):
-    """
-    Fetch data from Google Sheets and filter by category.
-    Args:
-        category (str): The category to filter (e.g., 'movies', 'series').
-        page (int): Current page number.
-        items_per_page (int): Number of items to display per page.
-    Returns:
-        tuple: List of items for the page, total number of items.
-    """
-    response = requests.get(CSV_URL)
-    if response.status_code != 200:
-        return [], 0  # Return empty if there's an error
-
-    # Parse the CSV data
-    csv_content = StringIO(response.text)
-    csv_reader = csv.DictReader(csv_content)
-    all_data = [row for row in csv_reader if row["CATEGORY"].lower() == category.lower()]
-
-    # Pagination
-    start = (page - 1) * items_per_page
-    end = start + items_per_page
-    paginated_data = all_data[start:end]
-
-    return paginated_data, len(all_data)
-    category = "movies"
-page = 1  # First page
-items_per_page = 10
-
-data, total_items = fetch_data_from_sheet(category, page, items_per_page)
-print(f"Showing {len(data)} out of {total_items} items for category '{category}'")
-for item in data:
-    print(f"Name: {item['NAME']}, Year: {item['YEAR']}, Genre: {item['GENRE']}, IMDb: {item['IMDB']}")
-
 @Client.on_message(filters.private & filters.text & filters.incoming)
 async def pm_search(client, message):
+    if PM_SEARCH:
+        await auto_filter(client, message)  
+    else:
+        await message.reply_text("⚠️ ꜱᴏʀʀʏ ɪ ᴄᴀɴ'ᴛ ᴡᴏʀᴋ ɪɴ ᴘᴍ")
+    
+@Client.on_message(filters.group & filters.text & filters.incoming)
+async def group_search(client, message):
     if PM_SEARCH:
         await auto_filter(client, message)  
     else:
