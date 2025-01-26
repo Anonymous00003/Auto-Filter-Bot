@@ -509,10 +509,62 @@ async def cb_handler(client: Client, query: CallbackQuery):
         ]
         reply_markup = InlineKeyboardMarkup(buttons)
         await query.message.edit_text(
-             text="Explore the options below:",
-             reply_markup=reply_markup,
-             parse_mode=enums.ParseMode.HTML
-        )
+        text="Explore the options below:",
+        reply_markup=reply_markup,
+        parse_mode=enums.ParseMode.HTML
+    )
+
+elif query.data == "movies":
+    buttons = [
+        [InlineKeyboardButton("🔎 Search By Genre", callback_data="search_movies_genre")],
+        [InlineKeyboardButton("📅 Search By Year", callback_data="search_movies_year")],
+        [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="explore"), InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close_data")]
+    ]
+    reply_markup = InlineKeyboardMarkup(buttons)
+    await query.message.edit_text(
+        text="🎥 **Movies Menu**\nChoose how you want to browse:",
+        reply_markup=reply_markup,
+        parse_mode=enums.ParseMode.HTML
+    )
+
+elif query.data == "series":
+    buttons = [
+        [InlineKeyboardButton("🔎 Search By Genre", callback_data="search_series_genre")],
+        [InlineKeyboardButton("📅 Search By Year", callback_data="search_series_year")],
+        [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="explore"), InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close_data")]
+    ]
+    reply_markup = InlineKeyboardMarkup(buttons)
+    await query.message.edit_text(
+        text="📺 **Series Menu**\nChoose how you want to browse:",
+        reply_markup=reply_markup,
+        parse_mode=enums.ParseMode.HTML
+    )
+
+elif query.data == "tv_shows":
+    buttons = [
+        [InlineKeyboardButton("🔎 Search By Genre", callback_data="search_tvshows_genre")],
+        [InlineKeyboardButton("📅 Search By Year", callback_data="search_tvshows_year")],
+        [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="explore"), InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close_data")]
+    ]
+    reply_markup = InlineKeyboardMarkup(buttons)
+    await query.message.edit_text(
+        text="📼 **TV Shows Menu**\nChoose how you want to browse:",
+        reply_markup=reply_markup,
+        parse_mode=enums.ParseMode.HTML
+    )
+
+elif query.data == "anime":
+    buttons = [
+        [InlineKeyboardButton("🔎 Search By Genre", callback_data="search_anime_genre")],
+        [InlineKeyboardButton("📅 Search By Year", callback_data="search_anime_year")],
+        [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="explore"), InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close_data")]
+    ]
+    reply_markup = InlineKeyboardMarkup(buttons)
+    await query.message.edit_text(
+        text="🎬 **Anime Menu**\nChoose how you want to browse:",
+        reply_markup=reply_markup,
+        parse_mode=enums.ParseMode.HTML
+    )
 
       # Handling the "join update channel" button click
     elif query.data == "join_update_channel":
