@@ -532,27 +532,30 @@ def fetch_data_from_sheet(category, page, items_per_page):
         return []
     else:
         raise NotImplementedError("Category not implemented")
-    elif query.data == "movies":
+
+
+# Handling callback queries
+@Client.on_callback_query()
+async def cb_handler(client: Client, query: CallbackQuery):
+    if query.data == "movies":
         buttons = [
-        # Genres (add or remove based on your data)
+            # Genres (add or remove based on your data)
             [InlineKeyboardButton("🔎 Action", callback_data="movies_genre_action"),
              InlineKeyboardButton("🔎 Comedy", callback_data="movies_genre_comedy")],
             [InlineKeyboardButton("🔎 Drama", callback_data="movies_genre_drama")],
-
-        # Years
+            # Years
             [InlineKeyboardButton("📅 2023", callback_data="movies_year_2023"),
              InlineKeyboardButton("📅 2022", callback_data="movies_year_2022")],
             [InlineKeyboardButton("📅 2021", callback_data="movies_year_2021")],
-
-        # Back and Close buttons
+            # Back and Close buttons
             [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="explore"),
              InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close_data")]
         ]
         reply_markup = InlineKeyboardMarkup(buttons)
         await query.message.edit_text(
-        text="🎥 **Movies Menu**\nChoose a genre or year to browse movies:",
-        reply_markup=reply_markup,
-        parse_mode=enums.ParseMode.HTML
+            text="🎥 **Movies Menu**\nChoose a genre or year to browse movies:",
+            reply_markup=reply_markup,
+            parse_mode=enums.ParseMode.HTML
         )
     elif query.data == "movies":
     category = "movies"  # Define the category based on button click
