@@ -514,6 +514,19 @@ async def cb_handler(client: Client, query: CallbackQuery):
         reply_markup=reply_markup,
         parse_mode=enums.ParseMode.HTML
     )
+    def fetch_data_from_sheet(category, page, items_per_page):
+    # Your logic to fetch data based on category
+    # For example, fetch data from Google Sheets based on category
+    if category == "movies":
+        # Fetch movie data
+    elif category == "series":
+        # Fetch series data
+    elif category == "tv_shows":
+        # Fetch tv shows data
+    elif category == "anime":
+        # Fetch anime data
+    
+    
     elif query.data == "movies":
         buttons = [
         # Genres (add or remove based on your data)
@@ -536,6 +549,10 @@ async def cb_handler(client: Client, query: CallbackQuery):
         reply_markup=reply_markup,
         parse_mode=enums.ParseMode.HTML
     )
+    elif query.data == "movies":
+    category = "movies"  # Define the category based on button click
+    data, total_items = fetch_data_from_sheet(category, page, items_per_page)
+    # Continue with your logic for movies
 
 # Handling genre and year selection
     elif query.data.startswith("movies_genre_"):
@@ -576,6 +593,10 @@ async def cb_handler(client: Client, query: CallbackQuery):
         reply_markup=reply_markup,
         parse_mode=enums.ParseMode.HTML
         )
+    elif query.data == "series":
+    category = "series"
+    data, total_items = fetch_data_from_sheet(category, page, items_per_page)
+    # Handle series data here
 
     elif query.data == "tv_shows":
         buttons = [
@@ -599,6 +620,10 @@ async def cb_handler(client: Client, query: CallbackQuery):
         reply_markup=reply_markup,
         parse_mode=enums.ParseMode.HTML
         )
+    elif query.data == "tv_shows":
+    category = "tv_shows"
+    data, total_items = fetch_data_from_sheet(category, page, items_per_page)
+    # Handle tv shows data here
 
     elif query.data == "anime":
         buttons = [
