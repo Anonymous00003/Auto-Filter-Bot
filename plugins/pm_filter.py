@@ -13,6 +13,9 @@ from pyrogram.errors import MessageNotModified
 from utils import temp, get_settings, is_check_admin, get_status, get_hash, get_name, get_size, save_group_settings, get_poster, get_status, get_readable_time, get_shortlink, is_req_subscribed
 from database.users_chats_db import db
 from database.ia_filterdb import Media, get_search_results, get_bad_files, get_file_details
+import csv
+import requests
+from io import StringIO
 
 lock = asyncio.Lock()
 
@@ -22,6 +25,95 @@ BUTTONS = {}
 FILES_ID = {}
 CAP = {}
 
+
+# URL of the CSV file
+CSV_URL = "https://docs.google.com/spreadsheets/d/1gZlfuppuIK0MVMTue-mZoDjbeSGGPfBaB_eI3fr2s7c
+/export?format=csv"
+
+# Function to fetch movie data from Google Sheets
+def fetch_csv_data():
+    try:
+        response = requests.get(CSV_URL)
+        if response.status_code == 200:
+            csv_content = StringIO(response.text)
+            csv_reader = csv.DictReader(csv_content)
+
+            movies_data = []
+            for row in csv_reader:
+                movies_data.append({
+                    'title': row['Movie Title'],  # Adjust based on your column headers
+                    'release_date': row['Release Date'],
+                    'download_link': row['Download Link']
+                })
+            return movies_data
+        else:
+            print(f"Error fetching CSV: {response.status_code}")
+            return []
+    except Exception as e:
+        print(f"Error: {e}")
+        return []
+
+# Callback query handler
+@Client.on_callback_query()
+async def cb_handler(client: Client, query: CallbackQuery):
+    if query.data == "close_data":
+        try:
+            user = query.message.reply_to_message.from_user.id
+        except:
+            user = query.from_user.id
+        if int(user) != 0 and query.from_user.id != int(user):
+            return await query.answer("You don't have permission.", show_alert=True)
+        await query.answer("ᴛʜᴀɴᴋs ꜰᴏʀ ᴄʟᴏsᴇ 🙈")
+        await query.message.delete()
+        try:
+            await query.message.reply_to_message.delete()
+        except:
+            pass
+
+    elif query.data == "movies":
+        # Fetch movie data
+        movies = fetch_csv_data()
+        if movies:
+            # Create buttons for movies
+            movie_buttons = [
+                [InlineKeyboardButton(f"🎬 {movie['title']}", callback_data=f"movie_{movie['title']}")]
+                for movie in movies
+            ]
+            # Add a back button
+            movie_buttons.append([InlineKeyboardButton("🔙 Back", callback_data="main_menu")])
+
+            await query.message.edit_text(
+                "Select a movie:",
+                reply_markup=InlineKeyboardMarkup(movie_buttons)
+            )
+        else:
+            await query.message.edit_text("No movies available right now.")
+
+    elif query.data.startswith("movie_"):
+        # Extract the movie title
+        movie_title = query.data.split("_", 1)[1]
+        # Search for the movie in the group (construct a search URL)
+        group_username = "gfgjjgfghk"  # Replace with your group's username without @
+        search_url = f"https://t.me/{group_username}?q={movie_title}"
+
+        await query.message.edit_text(
+            f"You selected **{movie_title}**.\nClick [here]({search_url}) to search for this movie in the group.",
+            disable_web_page_preview=True,
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton("🔙 Back", callback_data="movies")]]
+            )
+        )
+
+    elif query.data == "main_menu":
+        # Redirect back to the main menu
+        main_menu_buttons = [
+            [InlineKeyboardButton("🎬 Movies", callback_data="movies")],
+            [InlineKeyboardButton("Close", callback_data="close_data")]
+        ]
+        await query.message.edit_text(
+            "Welcome to the main menu.",
+            reply_markup=InlineKeyboardMarkup(main_menu_buttons)
+        )
 
 @Client.on_message(filters.private & filters.text & filters.incoming)
 async def pm_search(client, message):
