@@ -558,25 +558,26 @@ async def cb_handler(client: Client, query: CallbackQuery):
             parse_mode=enums.ParseMode.HTML
         )
     elif query.data == "movies":
-    category = "movies"  # Define the category based on button click
-    data, total_items = fetch_data_from_sheet(category, page, items_per_page)
-    # Continue with your logic for movies
+        category = "movies"  # Define the category based on button click
+        data, total_items = fetch_data_from_sheet(category, page, items_per_page)
+        # Add your logic to handle movies data here
 
-    # Handling genre and year selection
+
+        # Handling genre and year selection
     elif query.data.startswith("movies_genre_"):
-    genre = query.data.split("_")[-1]
-    filtered_movies = filter_by_genre(genre)
+        genre = query.data.split("_")[-1]
+        filtered_movies = filter_by_genre(genre)
         await query.message.edit_text(
         text=f"🎥 **{genre.capitalize()} Movies**:\n\n" + format_movie_list(filtered_movies),
         parse_mode=enums.ParseMode.HTML
-    )
+        )
     elif query.data.startswith("movies_year_"):
-    year = int(query.data.split("_")[-1])
-    filtered_movies = filter_by_year(year)
+        year = int(query.data.split("_")[-1])
+        filtered_movies = filter_by_year(year)
         await query.message.edit_text(
         text=f"🎥 **Movies from {year}**:\n\n" + format_movie_list(filtered_movies),
         parse_mode=enums.ParseMode.HTML
-    )
+        )
     elif query.data == "series":
         buttons = [
         # Genres
@@ -592,8 +593,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
         # Back and Close buttons
             [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="explore"),
              InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close_data")]
-    ]
-    reply_markup = InlineKeyboardMarkup(buttons)
+        ]
+        reply_markup = InlineKeyboardMarkup(buttons)
         await query.message.edit_text(
         text="📺 **Series Menu**\nChoose a genre or year to browse series:",
         reply_markup=reply_markup,
