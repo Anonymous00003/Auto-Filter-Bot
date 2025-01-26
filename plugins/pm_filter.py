@@ -75,28 +75,28 @@ async def cb_handler(client: Client, query: CallbackQuery):
         if movies:
             # Create buttons for movies
             movie_buttons = [
-                [InlineKeyboardButton(f"🎬 {movie['title']}", callback_data=f"movie_{movie['title']}")]
-                for movie in movies
+                [InlineKeyboardButton(f"🎬 {movies['title']}", callback_data=f"movies_{movies['title']}")]
+                for movies in movies
             ]
             # Add a back button
-            movie_buttons.append([InlineKeyboardButton("🔙 Back", callback_data="main_menu")])
+            movies_buttons.append([InlineKeyboardButton("🔙 Back", callback_data="main_menu")])
 
             await query.message.edit_text(
                 "Select a movie:",
-                reply_markup=InlineKeyboardMarkup(movie_buttons)
+                reply_markup=InlineKeyboardMarkup(movies_buttons)
             )
         else:
             await query.message.edit_text("No movies available right now.")
 
-    elif query.data.startswith("movie_"):
+    elif query.data.startswith("movies_"):
         # Extract the movie title
         movie_title = query.data.split("_", 1)[1]
         # Search for the movie in the group (construct a search URL)
         group_username = "gfgjjgfghk"  # Replace with your group's username without @
-        search_url = f"https://t.me/{group_username}?q={movie_title}"
+        search_url = f"https://t.me/{group_username}?q={movies_title}"
 
         await query.message.edit_text(
-            f"You selected **{movie_title}**.\nClick [here]({search_url}) to search for this movie in the group.",
+            f"You selected **{movies_title}**.\nClick [here]({search_url}) to search for this movie in the group.",
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup(
                 [[InlineKeyboardButton("🔙 Back", callback_data="movies")]]
