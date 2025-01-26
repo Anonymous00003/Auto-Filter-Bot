@@ -517,7 +517,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
     def fetch_data_from_sheet(category, page, items_per_page):
     # Your logic to fetch data based on category
     # For example, fetch data from Google Sheets based on category
-    if category == "movies":
+        if category == "movies":
         # Fetch movie data
     elif category == "series":
         # Fetch series data
