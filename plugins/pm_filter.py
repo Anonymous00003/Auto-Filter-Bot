@@ -534,7 +534,24 @@ async def cb_handler(client: Client, query: CallbackQuery):
         text="🎥 **Movies Menu**\nChoose a genre or year to browse movies:",
         reply_markup=reply_markup,
         parse_mode=enums.ParseMode.HTML
-        )
+    )
+
+# Handling genre and year selection
+    elif query.data.startswith("movies_genre_"):
+    genre = query.data.split("_")[-1]
+    filtered_movies = filter_by_genre(genre)
+        await query.message.edit_text(
+        text=f"🎥 **{genre.capitalize()} Movies**:\n\n" + format_movie_list(filtered_movies),
+        parse_mode=enums.ParseMode.HTML
+    )
+
+    elif query.data.startswith("movies_year_"):
+    year = int(query.data.split("_")[-1])
+    filtered_movies = filter_by_year(year)
+        await query.message.edit_text(
+        text=f"🎥 **Movies from {year}**:\n\n" + format_movie_list(filtered_movies),
+        parse_mode=enums.ParseMode.HTML
+    )
 
     elif query.data == "series":
         buttons = [
@@ -551,7 +568,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         # Back and Close buttons
             [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="explore"),
              InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close_data")]
-        ]
+    ]
     reply_markup = InlineKeyboardMarkup(buttons)
         await query.message.edit_text(
         text="📺 **Series Menu**\nChoose a genre or year to browse series:",
