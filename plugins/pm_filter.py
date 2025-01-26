@@ -16,6 +16,7 @@ from database.ia_filterdb import Media, get_search_results, get_bad_files, get_f
 import csv
 import requests
 from io import StringIO
+from movie import movies
 
 lock = asyncio.Lock()
 
