@@ -26,92 +26,43 @@ FILES_ID = {}
 CAP = {}
 
 
-# URL of the CSV file
-CSV_URL = "https://docs.google.com/spreadsheets/d/1X1ti6NLcAjkEOFmooaLuXUqD7VIf-BX58-g035kZz4A/export?format=csv&id=1gZlfuppuIK0MVMTue-mZoDjbeSGGPfBaB_eI3fr2s7c&gid=0"
+# Google Sheets Public CSV URL
+CSV_URL = "https://docs.google.com/spreadsheets/d/1X1ti6NLcAjkEOFmooaLuXUqD7VIf-BX58-g035kZz4A/export?format=csv"
 
-# Function to fetch movie data from Google Sheets
-def fetch_csv_data():
-    try:
-        response = requests.get(CSV_URL)
-        if response.status_code == 200:
-            csv_content = StringIO(response.text)
-            csv_reader = csv.DictReader(csv_content)
+# Function to fetch and paginate data
+def fetch_data_from_sheet(category, page=1, items_per_page=10):
+    """
+    Fetch data from Google Sheets and filter by category.
+    Args:
+        category (str): The category to filter (e.g., 'movies', 'series').
+        page (int): Current page number.
+        items_per_page (int): Number of items to display per page.
+    Returns:
+        tuple: List of items for the page, total number of items.
+    """
+    response = requests.get(CSV_URL)
+    if response.status_code != 200:
+        return [], 0  # Return empty if there's an error
 
-            movies_data = []
-            for row in csv_reader:
-                movies_data.append({
-                    'title': row['NAME'],  # "NAME" column for the movie title
-                    'year': row['YEAR'],   # "YEAR" column for the movie year
-                })
-            return movies_data
-        else:
-            print(f"Error fetching CSV: {response.status_code}")
-            return []
-    except Exception as e:
-        print(f"Error: {e}")
-        return []
+    # Parse the CSV data
+    csv_content = StringIO(response.text)
+    csv_reader = csv.DictReader(csv_content)
+    all_data = [row for row in csv_reader if row["CATEGORY"].lower() == category.lower()]
 
-# Callback query handler
-@Client.on_callback_query()
-async def cb_handler(client: Client, query: CallbackQuery):
-    if query.data == "close_data":
-        try:
-            user = query.message.reply_to_message.from_user.id
-        except:
-            user = query.from_user.id
-        if int(user) != 0 and query.from_user.id != int(user):
-            return await query.answer("You don't have permission.", show_alert=True)
-        await query.answer("ᴛʜᴀɴᴋs ꜰᴏʀ ᴄʟᴏsᴇ 🙈")
-        await query.message.delete()
-        try:
-            await query.message.reply_to_message.delete()
-        except:
-            pass
+    # Pagination
+    start = (page - 1) * items_per_page
+    end = start + items_per_page
+    paginated_data = all_data[start:end]
 
-    elif query.data == "movies":
-        # Fetch movie data
-        movies = fetch_csv_data()
-        if movies:
-            # Create buttons for movies, displaying both title and year
-            movie_buttons = [
-                [InlineKeyboardButton(f"🎬 {movie['title']} ({movie['year']})", callback_data=f"movies_{movie['title']}")]
-                for movie in movies
-            ]
-            # Add a back button
-            movie_buttons.append([InlineKeyboardButton("🔙 Back", callback_data="main_menu")])
+    return paginated_data, len(all_data)
+    category = "movies"
+page = 1  # First page
+items_per_page = 10
 
-            await query.message.edit_text(
-                "Select a movie:",
-                reply_markup=InlineKeyboardMarkup(movie_buttons)
-            )
-        else:
-            await query.message.edit_text("No movies available right now.")
-
-    elif query.data.startswith("movies_"):
-        # Extract the movie title
-        movie_title = query.data.split("_", 1)[1]
-        # Search for the movie in the group (construct a search URL)
-        group_username = "gfgjjgfghk"  # Replace with your group's username without @
-        search_url = f"https://t.me/{group_username}?q={movie_title}"
-
-        await query.message.edit_text(
-            f"You selected **{movie_title}**.\nClick [here]({search_url}) to search for this movie in the group.",
-            disable_web_page_preview=True,
-            reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("🔙 Back", callback_data="movies")]]
-            )
-        )
-
-    elif query.data == "main_menu":
-        # Redirect back to the main menu
-        main_menu_buttons = [
-            [InlineKeyboardButton("🎬 Movies", callback_data="movies")],
-            [InlineKeyboardButton("Close", callback_data="close_data")]
-        ]
-        await query.message.edit_text(
-            "Welcome to the main menu.",
-            reply_markup=InlineKeyboardMarkup(main_menu_buttons)
-        )
+data, total_items = fetch_data_from_sheet(category, page, items_per_page)
+print(f"Showing {len(data)} out of {total_items} items for category '{category}'")
+for item in data:
+    print(f"Name: {item['NAME']}, Year: {item['YEAR']}, Genre: {item['GENRE']}, IMDb: {item['IMDB']}")
 
 @Client.on_message(filters.private & filters.text & filters.incoming)
 async def pm_search(client, message):
