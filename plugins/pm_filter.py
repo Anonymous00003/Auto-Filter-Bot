@@ -517,24 +517,24 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
 # Properly defined function with correct indentation
 def fetch_data_from_sheet(category, page, items_per_page):
-    # Your logic to fetch data based on category
-    # For example, fetch data from Google Sheets based on category
+    # Example logic
     if category == "movies":
-        # Fetch movie data
-        pass
+        # Fetch movie data (placeholder)
+        return []  # Return empty list for now
     elif category == "series":
-        # Fetch series data
-        pass
+        # Fetch series data (placeholder)
+        return []
     elif category == "tv_shows":
-        # Fetch TV shows data
-        pass
+        # Fetch TV shows data (placeholder)
+        return []
     elif category == "anime":
-        # Fetch anime data
-        pass
+        # Fetch anime data (placeholder)
+        return []
+    else:
+        raise NotImplementedError("Category not implemented")
 
-elif query.data == "movies":
-    # Code for handling the "movies" button
-    pass:
+
+    elif query.data == "movies":
         buttons = [
         # Genres (add or remove based on your data)
             [InlineKeyboardButton("🔎 Action", callback_data="movies_genre_action"),
@@ -543,25 +543,25 @@ elif query.data == "movies":
 
         # Years
             [InlineKeyboardButton("📅 2023", callback_data="movies_year_2023"),
-            InlineKeyboardButton("📅 2022", callback_data="movies_year_2022")],
+             InlineKeyboardButton("📅 2022", callback_data="movies_year_2022")],
             [InlineKeyboardButton("📅 2021", callback_data="movies_year_2021")],
 
         # Back and Close buttons
             [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="explore"),
-            InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close_data")]
+             InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close_data")]
         ]
         reply_markup = InlineKeyboardMarkup(buttons)
         await query.message.edit_text(
         text="🎥 **Movies Menu**\nChoose a genre or year to browse movies:",
         reply_markup=reply_markup,
         parse_mode=enums.ParseMode.HTML
-    )
+        )
     elif query.data == "movies":
     category = "movies"  # Define the category based on button click
     data, total_items = fetch_data_from_sheet(category, page, items_per_page)
     # Continue with your logic for movies
 
-# Handling genre and year selection
+    # Handling genre and year selection
     elif query.data.startswith("movies_genre_"):
     genre = query.data.split("_")[-1]
     filtered_movies = filter_by_genre(genre)
