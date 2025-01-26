@@ -27,7 +27,7 @@ CAP = {}
 
 
 # URL of the CSV file
-CSV_URL = "https://docs.google.com/spreadsheets/d/1gZlfuppuIK0MVMTue-mZoDjbeSGGPfBaB_eI3fr2s7c/export?format=csv&id=1gZlfuppuIK0MVMTue-mZoDjbeSGGPfBaB_eI3fr2s7c&gid=0"
+CSV_URL = "https://docs.google.com/spreadsheets/d/1X1ti6NLcAjkEOFmooaLuXUqD7VIf-BX58-g035kZz4A/export?format=csv&id=1gZlfuppuIK0MVMTue-mZoDjbeSGGPfBaB_eI3fr2s7c&gid=0"
 
 # Function to fetch movie data from Google Sheets
 def fetch_csv_data():
