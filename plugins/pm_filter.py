@@ -516,7 +516,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
     )
 
 
-    elif query.data == "series":
+    elif query.data == "Movies":
         buttons = [
             # Genres (add or remove based on your data)
             [InlineKeyboardButton("🔎 Action", callback_data="movies_genre_action"),
@@ -532,7 +532,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         ]
         reply_markup = InlineKeyboardMarkup(buttons)
         await query.message.edit_text(
-            text="🎥 **Movies Menu**\nChoose a genre or year to browse movies:",
+            text="🎬 Movies Menu\nChoose a genre or year to browse movies:",
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML
         )
@@ -555,7 +555,30 @@ async def cb_handler(client: Client, query: CallbackQuery):
         ]
         reply_markup = InlineKeyboardMarkup(buttons)
         await query.message.edit_text(
-        text="📺 **Series Menu**\nChoose a genre or year to browse series:",
+        text="🎥 Series Menu\nChoose a genre or year to browse series:",
+        reply_markup=reply_markup,
+        parse_mode=enums.ParseMode.HTML
+        )
+
+    elif query.data == "tv_shows":
+        buttons = [
+        # Genres
+            [InlineKeyboardButton("🔎 Action", callback_data="tv_shows_genre_action"),
+             InlineKeyboardButton("🔎 Fantasy", callback_data="tv_shows_genre_fantasy")],
+            [InlineKeyboardButton("🔎 Romance", callback_data="tv_shows_genre_romance")],
+
+        # Years
+            [InlineKeyboardButton("📅 2023", callback_data="tv_shows_year_2023"),
+             InlineKeyboardButton("📅 2022", callback_data="tv_shows_year_2022")],
+            [InlineKeyboardButton("📅 2021", callback_data="tv_shows_year_2021")],
+
+        # Back and Close buttons
+            [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="explore"),
+             InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close_data")]
+        ]
+        reply_markup = InlineKeyboardMarkup(buttons)
+        await query.message.edit_text(
+        text="📺 TV Shows Menu\nChoose a genre or year to browse anime:",
         reply_markup=reply_markup,
         parse_mode=enums.ParseMode.HTML
         )
@@ -578,7 +601,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         ]
         reply_markup = InlineKeyboardMarkup(buttons)
         await query.message.edit_text(
-        text="🎬 **Anime Menu**\nChoose a genre or year to browse anime:",
+        text="🐉 Anime Menu\nChoose a genre or year to browse anime:",
         reply_markup=reply_markup,
         parse_mode=enums.ParseMode.HTML
         )
