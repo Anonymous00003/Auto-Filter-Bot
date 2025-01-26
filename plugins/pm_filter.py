@@ -27,7 +27,7 @@ CAP = {}
 
 
 # URL of the CSV file
-CSV_URL = "https://docs.google.com/spreadsheets/d/1gZlfuppuIK0MVMTue-mZoDjbeSGGPfBaB_eI3fr2s7c/export?format=csv"
+CSV_URL = "https://docs.google.com/spreadsheets/d/1gZlfuppuIK0MVMTue-mZoDjbeSGGPfBaB_eI3fr2s7c/export?format=csv&id=1gZlfuppuIK0MVMTue-mZoDjbeSGGPfBaB_eI3fr2s7c&gid=0"
 
 # Function to fetch movie data from Google Sheets
 def fetch_csv_data():
@@ -40,9 +40,8 @@ def fetch_csv_data():
             movies_data = []
             for row in csv_reader:
                 movies_data.append({
-                    'title': row['Movie Title'],  # Adjust based on your column headers
-                    'release_date': row['Release Date'],
-                    'download_link': row['Download Link']
+                    'title': row['NAME'],  # "NAME" column for the movie title
+                    'year': row['YEAR'],   # "YEAR" column for the movie year
                 })
             return movies_data
         else:
@@ -73,17 +72,17 @@ async def cb_handler(client: Client, query: CallbackQuery):
         # Fetch movie data
         movies = fetch_csv_data()
         if movies:
-            # Create buttons for movies
+            # Create buttons for movies, displaying both title and year
             movie_buttons = [
-                [InlineKeyboardButton(f"🎬 {movies['title']}", callback_data=f"movies_{movies['title']}")]
-                for movies in movies
+                [InlineKeyboardButton(f"🎬 {movie['title']} ({movie['year']})", callback_data=f"movies_{movie['title']}")]
+                for movie in movies
             ]
             # Add a back button
-            movies_buttons.append([InlineKeyboardButton("🔙 Back", callback_data="main_menu")])
+            movie_buttons.append([InlineKeyboardButton("🔙 Back", callback_data="main_menu")])
 
             await query.message.edit_text(
                 "Select a movie:",
-                reply_markup=InlineKeyboardMarkup(movies_buttons)
+                reply_markup=InlineKeyboardMarkup(movie_buttons)
             )
         else:
             await query.message.edit_text("No movies available right now.")
@@ -93,10 +92,10 @@ async def cb_handler(client: Client, query: CallbackQuery):
         movie_title = query.data.split("_", 1)[1]
         # Search for the movie in the group (construct a search URL)
         group_username = "gfgjjgfghk"  # Replace with your group's username without @
-        search_url = f"https://t.me/{group_username}?q={movies_title}"
+        search_url = f"https://t.me/{group_username}?q={movie_title}"
 
         await query.message.edit_text(
-            f"You selected **{movies_title}**.\nClick [here]({search_url}) to search for this movie in the group.",
+            f"You selected **{movie_title}**.\nClick [here]({search_url}) to search for this movie in the group.",
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup(
                 [[InlineKeyboardButton("🔙 Back", callback_data="movies")]]
@@ -120,6 +119,7 @@ async def pm_search(client, message):
         await auto_filter(client, message)  
     else:
         await message.reply_text("⚠️ ꜱᴏʀʀʏ ɪ ᴄᴀɴ'ᴛ ᴡᴏʀᴋ ɪɴ ᴘᴍ")
+
     
 @Client.on_message(filters.group & filters.text & filters.incoming)
 async def group_search(client, message):
