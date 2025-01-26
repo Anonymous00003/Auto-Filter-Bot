@@ -609,50 +609,51 @@ async def cb_handler(client: Client, query: CallbackQuery):
     # Handle series data here
     # Add logic to display or process the data
     elif query.data == "tv_shows":
-        buttons = [
+    buttons = [
         # Genres
-            [InlineKeyboardButton("🔎 Comedy", callback_data="tvshows_genre_comedy"),
-             InlineKeyboardButton("🔎 Reality", callback_data="tvshows_genre_reality")],
-            [InlineKeyboardButton("🔎 Drama", callback_data="tvshows_genre_drama")],
+        [InlineKeyboardButton("🔎 Comedy", callback_data="tvshows_genre_comedy"),
+         InlineKeyboardButton("🔎 Reality", callback_data="tvshows_genre_reality")],
+        [InlineKeyboardButton("🔎 Drama", callback_data="tvshows_genre_drama")],
 
         # Years
-            [InlineKeyboardButton("📅 2023", callback_data="tvshows_year_2023"),
-             InlineKeyboardButton("📅 2022", callback_data="tvshows_year_2022")],
-            [InlineKeyboardButton("📅 2021", callback_data="tvshows_year_2021")],
+        [InlineKeyboardButton("📅 2023", callback_data="tvshows_year_2023"),
+         InlineKeyboardButton("📅 2022", callback_data="tvshows_year_2022")],
+        [InlineKeyboardButton("📅 2021", callback_data="tvshows_year_2021")],
 
         # Back and Close buttons
-            [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="explore"),
-             InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close_data")]
+        [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="explore"),
+         InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close_data")]
     ]
-            reply_markup = InlineKeyboardMarkup(buttons)
-            await query.message.edit_text(
-            text="📼 **TV Shows Menu**\nChoose a genre or year to browse TV shows:",
-            reply_markup=reply_markup,
-            parse_mode=enums.ParseMode.HTML
+    reply_markup = InlineKeyboardMarkup(buttons)
+    await query.message.edit_text(
+        text="📼 **TV Shows Menu**\nChoose a genre or year to browse TV shows:",
+        reply_markup=reply_markup,
+        parse_mode=enums.ParseMode.HTML
     )
 
-    elif query.data == "anime":
-        buttons = [
+elif query.data == "anime":
+    buttons = [
         # Genres
-            [InlineKeyboardButton("🔎 Action", callback_data="anime_genre_action"),
-             InlineKeyboardButton("🔎 Fantasy", callback_data="anime_genre_fantasy")],
-            [InlineKeyboardButton("🔎 Romance", callback_data="anime_genre_romance")],
+        [InlineKeyboardButton("🔎 Action", callback_data="anime_genre_action"),
+         InlineKeyboardButton("🔎 Fantasy", callback_data="anime_genre_fantasy")],
+        [InlineKeyboardButton("🔎 Romance", callback_data="anime_genre_romance")],
 
         # Years
-            [InlineKeyboardButton("📅 2023", callback_data="anime_year_2023"),
-             InlineKeyboardButton("📅 2022", callback_data="anime_year_2022")],
-            [InlineKeyboardButton("📅 2021", callback_data="anime_year_2021")],
+        [InlineKeyboardButton("📅 2023", callback_data="anime_year_2023"),
+         InlineKeyboardButton("📅 2022", callback_data="anime_year_2022")],
+        [InlineKeyboardButton("📅 2021", callback_data="anime_year_2021")],
 
         # Back and Close buttons
-            [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="explore"),
-             InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close_data")]
+        [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="explore"),
+         InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close_data")]
     ]
-             reply_markup = InlineKeyboardMarkup(buttons)
-             await query.message.edit_text(
-             text="🎬 **Anime Menu**\nChoose a genre or year to browse anime:",
-             reply_markup=reply_markup,
-             parse_mode=enums.ParseMode.HTML
+    reply_markup = InlineKeyboardMarkup(buttons)
+    await query.message.edit_text(
+        text="🎬 **Anime Menu**\nChoose a genre or year to browse anime:",
+        reply_markup=reply_markup,
+        parse_mode=enums.ParseMode.HTML
     )
+
 
 
       # Handling the "join update channel" button click
