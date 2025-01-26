@@ -516,7 +516,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
     )
 
 
-    elif query.data == "Movies":
+    elif query.data == "movies":
         buttons = [
             # Genres (add or remove based on your data)
             [InlineKeyboardButton("🔎 Action", callback_data="movies_genre_action"),
@@ -578,7 +578,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         ]
         reply_markup = InlineKeyboardMarkup(buttons)
         await query.message.edit_text(
-        text="📺 TV Shows Menu\nChoose a genre or year to browse anime:",
+        text="📺 TV Shows Menu\nChoose a genre or year to browse TV shows:",
         reply_markup=reply_markup,
         parse_mode=enums.ParseMode.HTML
         )
