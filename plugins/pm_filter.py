@@ -479,12 +479,14 @@ async def cb_handler(client: Client, query: CallbackQuery):
              parse_mode=enums.ParseMode.HTML
         )
     elif query.data == 'about':
-        await query.message.edit_text(
-            script.ABOUT_TEXT.format(query.from_user.mention(),temp.B_LINK),
-            reply_markup = InlineKeyboardMarkup(
-                [[InlineKeyboardButton('⋞ ʜᴏᴍᴇ', callback_data='start')]]
-                ),
-            disable_web_page_preview = True
+    await query.message.edit_text(
+        text=script.ABOUT_TEXT.format(query.from_user.mention(), temp.B_LINK),
+        reply_markup=InlineKeyboardMarkup(
+            [[InlineKeyboardButton('⋞ ʜᴏᴍᴇ', callback_data='start')]]
+        ),
+        parse_mode=enums.ParseMode.HTML,  # Ensure the parse mode is specified
+        disable_web_page_preview=True     # Disable web page preview
+    )
      # Handling the "explore" button click
     elif query.data == "explore":
         buttons = [
