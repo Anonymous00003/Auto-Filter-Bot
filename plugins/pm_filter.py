@@ -514,20 +514,27 @@ async def cb_handler(client: Client, query: CallbackQuery):
         reply_markup=reply_markup,
         parse_mode=enums.ParseMode.HTML
     )
-    def fetch_data_from_sheet(category, page, items_per_page):
+
+# Properly defined function with correct indentation
+def fetch_data_from_sheet(category, page, items_per_page):
     # Your logic to fetch data based on category
     # For example, fetch data from Google Sheets based on category
-        if category == "movies":
+    if category == "movies":
         # Fetch movie data
+        pass
     elif category == "series":
         # Fetch series data
+        pass
     elif category == "tv_shows":
-        # Fetch tv shows data
+        # Fetch TV shows data
+        pass
     elif category == "anime":
         # Fetch anime data
-    
-    
-    elif query.data == "movies":
+        pass
+
+elif query.data == "movies":
+    # Code for handling the "movies" button
+    pass:
         buttons = [
         # Genres (add or remove based on your data)
             [InlineKeyboardButton("🔎 Action", callback_data="movies_genre_action"),
