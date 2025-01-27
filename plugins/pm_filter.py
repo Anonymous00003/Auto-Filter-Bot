@@ -536,10 +536,10 @@ async def cb_handler(client: Client, query: CallbackQuery):
         )
 
     elif query.data == "rules":
-    await query.message.edit_text(
-        text=Rules_txt,
-        parse_mode=enums.ParseMode.HTML,
-        disable_web_page_preview=True
+        await query.message.edit_text(
+            text=Rules_txt,
+            parse_mode=enums.ParseMode.HTML,
+            disable_web_page_preview=True
     )
             
       # Handling the "join update channel" button click
