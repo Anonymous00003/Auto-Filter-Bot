@@ -377,7 +377,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton('❌ ᴄʟᴏsᴇ ❌', callback_data='close_data')
+                        InlineKeyboardButton('✘ ᴄʟᴏsᴇ ✘', callback_data='close_data')
                     ]
                 ]
             )
@@ -523,8 +523,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
         ],
         # Row 5: Back + Close
         [
-            InlineKeyboardButton("🔙 Back", callback_data="start"),
-            InlineKeyboardButton("❌ Close", callback_data="close")
+            InlineKeyboardButton("⋞ ʜᴏᴍᴇ", callback_data="start"),
+            InlineKeyboardButton("✘ ᴄʟᴏsᴇ ✘", callback_data="close_data")
         ]
         ]
 
@@ -547,7 +547,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         buttons = [
             [InlineKeyboardButton("ᴍᴀɪɴ ᴍᴏᴠɪᴇ ɢʀᴏᴜᴘ", callback_data="main_movie_group")],
             [InlineKeyboardButton("ᴍᴀɪɴ ʙᴀᴄᴋᴜᴘ ɢʀᴏᴜᴘ", callback_data="main_backup_channel")],
-            [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="start"), InlineKeyboardButton("ᴄʟᴏꜱᴇ", callback_data="close_data")]
+            [InlineKeyboardButton("⋞ ʜᴏᴍᴇ", callback_data="start"), InlineKeyboardButton("✘ ᴄʟᴏsᴇ ✘", callback_data="close_data")]
         ]
         reply_markup = InlineKeyboardMarkup(buttons)
         await query.message.edit_text(
@@ -787,9 +787,13 @@ async def auto_filter(client, msg, spoll=False):
             **locals()
         )
     else:
-        cap = f"<b>📂 ʜᴇʀᴇ ɪ ꜰᴏᴜɴᴅ ꜰᴏʀ ʏᴏᴜʀ sᴇᴀʀᴄʜ {search}</b>"
+    user_mention = query.from_user.mention()  # Fetch the user's clickable mention
+    cap = f"<b>📂 ʜᴇʀᴇ ɪ ꜰᴏᴜɴᴅ ꜰᴏʀ ʏᴏᴜʀ sᴇᴀʀᴄʜ {search}</b>\n\n<b>👤 Requested by: {user_mention}</b>"
+    
     del_msg = f"\n\n<b>⚠️ ᴛʜɪs ᴍᴇssᴀɢᴇ ᴡɪʟʟ ʙᴇ ᴀᴜᴛᴏ ᴅᴇʟᴇᴛᴇ ᴀꜰᴛᴇʀ <code>{get_readable_time(DELETE_TIME)}</code> ᴛᴏ ᴀᴠᴏɪᴅ ᴄᴏᴘʏʀɪɢʜᴛ ɪssᴜᴇs</b>" if settings["auto_delete"] else ''
+    
     CAP[key] = cap
+    
     if imdb and imdb.get('poster'):
         try:
             if settings['auto_delete']:
