@@ -498,115 +498,42 @@ async def cb_handler(client: Client, query: CallbackQuery):
         ),
         parse_mode=enums.ParseMode.HTML,  # Ensure the parse mode is specified
         disable_web_page_preview=True     # Disable web page preview
-    )
-     # Handling the "explore" button click
-    elif query.data == "explore":
-        buttons = [
-            [InlineKeyboardButton("ʀᴜʟᴇs", callback_data="rules")],
-            [InlineKeyboardButton("ᴍᴏᴠɪᴇs", callback_data="movies"), InlineKeyboardButton("ꜱᴇʀɪᴇꜱ", callback_data="series")],
-            [InlineKeyboardButton("ᴛᴠ ꜱʜᴏᴡꜱ", callback_data="tv_shows"), InlineKeyboardButton("ᴀɴɪᴍᴇ", callback_data="anime")],
-            [InlineKeyboardButton("❗ᴅɪꜱᴄʟᴀɪᴍᴇʀ❗", callback_data="disclaimer")],
-            [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="start")]  # Or return to another menu
-        ]
-        reply_markup = InlineKeyboardMarkup(buttons)
-        await query.message.edit_text(
-        text="Explore the options below:",
-        reply_markup=reply_markup,
-        parse_mode=enums.ParseMode.HTML
         )
 
-    elif query.data == "movies":
+    # Handling the "explore" button click
+    elif query.data == "explore":
         buttons = [
-            # Genres (add or remove based on your data)
-            [InlineKeyboardButton("🔎 Action", callback_data="movies_genre_action"),
-             InlineKeyboardButton("🔎 Comedy", callback_data="movies_genre_comedy")],
-            [InlineKeyboardButton("🔎 Drama", callback_data="movies_genre_drama")],
-            # Years
-            [InlineKeyboardButton("📅 2023", callback_data="movies_year_2023"),
-             InlineKeyboardButton("📅 2022", callback_data="movies_year_2022")],
-            [InlineKeyboardButton("📅 2021", callback_data="movies_year_2021")],
-            # Back and Close buttons
-            [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="explore"),
-             InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close_data")]
+        # Row 1: Rules + Disclaimer
+        [
+            InlineKeyboardButton("📜 Rules", callback_data="rules"),
+            InlineKeyboardButton("❗ Disclaimer", callback_data="disclaimer")
+        ],
+        # Row 2: Latest Released
+        [
+            InlineKeyboardButton("🎬 Latest Releases", url=LATEST_RELEASES_URL")
+        ],
+        # Row 3: Genre-based + Year-based
+        [
+            InlineKeyboardButton("🎭 Genre-based", url=GENRE_BASED_URL"),
+            InlineKeyboardButton("📅 Year-based", url=YEAR_BASED_URL")
+        ],
+        # Row 4: All List Together
+        [
+            InlineKeyboardButton("📂 All Lists", url=ALL_LISTS_URL")
+        ],
+        # Row 5: Back + Close
+        [
+            InlineKeyboardButton("🔙 Back", callback_data="start"),
+            InlineKeyboardButton("❌ Close", callback_data="close")
         ]
+        ]
+
         reply_markup = InlineKeyboardMarkup(buttons)
         await query.message.edit_text(
-            text="🎬 Movies Menu\nChoose a genre or year to browse movies:",
+            text="Explore the options below:",
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML
         )
-    
-    elif query.data == "series":
-        buttons = [
-        # Genres
-            [InlineKeyboardButton("🔎 Action", callback_data="series_genre_action"),
-             InlineKeyboardButton("🔎 Thriller", callback_data="series_genre_thriller")],
-            [InlineKeyboardButton("🔎 Sci-Fi", callback_data="series_genre_scifi")],
-
-        # Years
-            [InlineKeyboardButton("📅 2023", callback_data="series_year_2023"),
-             InlineKeyboardButton("📅 2022", callback_data="series_year_2022")],
-            [InlineKeyboardButton("📅 2021", callback_data="series_year_2021")],
-
-        # Back and Close buttons
-            [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="explore"),
-             InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close_data")]
-        ]
-        reply_markup = InlineKeyboardMarkup(buttons)
-        await query.message.edit_text(
-        text="🎥 Series Menu\nChoose a genre or year to browse series:",
-        reply_markup=reply_markup,
-        parse_mode=enums.ParseMode.HTML
-        )
-
-    elif query.data == "tv_shows":
-        buttons = [
-        # Genres
-            [InlineKeyboardButton("🔎 Action", callback_data="tv_shows_genre_action"),
-             InlineKeyboardButton("🔎 Fantasy", callback_data="tv_shows_genre_fantasy")],
-            [InlineKeyboardButton("🔎 Romance", callback_data="tv_shows_genre_romance")],
-
-        # Years
-            [InlineKeyboardButton("📅 2023", callback_data="tv_shows_year_2023"),
-             InlineKeyboardButton("📅 2022", callback_data="tv_shows_year_2022")],
-            [InlineKeyboardButton("📅 2021", callback_data="tv_shows_year_2021")],
-
-        # Back and Close buttons
-            [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="explore"),
-             InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close_data")]
-        ]
-        reply_markup = InlineKeyboardMarkup(buttons)
-        await query.message.edit_text(
-        text="📺 TV Shows Menu\nChoose a genre or year to browse TV shows:",
-        reply_markup=reply_markup,
-        parse_mode=enums.ParseMode.HTML
-        )
-
-    elif query.data == "anime":
-        buttons = [
-        # Genres
-            [InlineKeyboardButton("🔎 Action", callback_data="anime_genre_action"),
-             InlineKeyboardButton("🔎 Fantasy", callback_data="anime_genre_fantasy")],
-            [InlineKeyboardButton("🔎 Romance", callback_data="anime_genre_romance")],
-
-        # Years
-            [InlineKeyboardButton("📅 2023", callback_data="anime_year_2023"),
-             InlineKeyboardButton("📅 2022", callback_data="anime_year_2022")],
-            [InlineKeyboardButton("📅 2021", callback_data="anime_year_2021")],
-
-        # Back and Close buttons
-            [InlineKeyboardButton("⋞ ʙᴀᴄᴋ", callback_data="explore"),
-             InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close_data")]
-        ]
-        reply_markup = InlineKeyboardMarkup(buttons)
-        await query.message.edit_text(
-        text="🐉 Anime Menu\nChoose a genre or year to browse anime:",
-        reply_markup=reply_markup,
-        parse_mode=enums.ParseMode.HTML
-        )
- 
-
-
       # Handling the "join update channel" button click
     elif query.data == "join_update_channel":
         buttons = [
