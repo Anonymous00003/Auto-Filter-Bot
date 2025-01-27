@@ -33,7 +33,13 @@ LOG_API_CHANNEL = int(environ.get('LOG_API_CHANNEL', '-1002476977759'))
 QR_CODE = environ.get('QR_CODE', 'https://envs.sh/g7V.jpg')
 DELETE_CHANNELS = [int(dch) if id_pattern.search(dch) else dch for dch in environ.get('DELETE_CHANNELS', '0').split()]
 
-#this vars is for when heroku or koyeb acc get banned, then change this vars as your file to link bot name
+#google sheet url 
+LATEST_RELEASES_URL = environ.get('LATEST_RELEASES_URL', "https://docs.google.com/spreadsheets/d/149ei1FGCp10KXYN_v3ZmbWXAdKMruD8O3DIhhA8av1k/edit?gid=1645655429#gid=1645655429")
+GENRE_BASED_URL = environ.get('GENRE_BASED_URL', "https://docs.google.com/spreadsheets/d/149ei1FGCp10KXYN_v3ZmbWXAdKMruD8O3DIhhA8av1k/edit?gid=0#gid=0")
+YEAR_BASED_URL = environ.get('YEAR_BASED_URL', "https://docs.google.com/spreadsheets/d/149ei1FGCp10KXYN_v3ZmbWXAdKMruD8O3DIhhA8av1k/edit?gid=389470683#gid=389470683")
+ALL_LISTS_URL = environ.get('ALL_LISTS_URL', "https://docs.google.com/spreadsheets/d/149ei1FGCp10KXYN_v3ZmbWXAdKMruD8O3DIhhA8av1k/edit?gid=2116350042#gid=2116350042")
+
+#this vars is for when heroku orkoyeb acc get banned, then change this vars as your file to link bot name
 BIN_CHANNEL = int(environ.get('BIN_CHANNEL', '-1002259764625'))
 URL = environ.get('URL', 'https://ultimate-marlie-filmyadda247-35db91f0.koyeb.app/')
 
