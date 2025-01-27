@@ -499,34 +499,21 @@ async def cb_handler(client: Client, query: CallbackQuery):
         parse_mode=enums.ParseMode.HTML,  # Ensure the parse mode is specified
         disable_web_page_preview=True     # Disable web page preview
         )
-
-    # Handling the "explore" button click
     elif query.data == "explore":
-        buttons = [
-        # Row 1: Rules + Disclaimer
-        [
-            InlineKeyboardButton("📜 Rules", callback_data="rules"),
+        buttons = [[
+            InlineKeyboardButton("📜 Rules", callback_data="rules"), 
             InlineKeyboardButton("❗ Disclaimer", callback_data="disclaimer")
-        ],
-        # Row 2: Latest Released
-        [
-            InlineKeyboardButton("🎬 Latest Releases", url=LATEST_RELEASES_URL")
-        ],
-        # Row 3: Genre-based + Year-based
-        [
-            InlineKeyboardButton("🎭 Genre-based", url=GENRE_BASED_URL"),
-            InlineKeyboardButton("📅 Year-based", url=YEAR_BASED_URL")
-        ],
-        # Row 4: All List Together
-        [
-            InlineKeyboardButton("📂 All Lists", url=ALL_LISTS_URL")
-        ],
-        # Row 5: Back + Close
-        [
+        ], [
+            InlineKeyboardButton("🎬 Latest Releases", url=LATEST_RELEASES_URL)
+        ], [
+            InlineKeyboardButton("🎭 Genre-based", url=GENRE_BASED_URL),
+            InlineKeyboardButton("📅 Year-based", url=YEAR_BASED_URL)
+        ], [
+            InlineKeyboardButton("📂 All Lists", url=ALL_LISTS_URL)
+        ], [
             InlineKeyboardButton("⋞ ʜᴏᴍᴇ", callback_data="start"),
             InlineKeyboardButton("✘ ᴄʟᴏsᴇ ✘", callback_data="close_data")
-        ]
-        ]
+        ]]
 
         reply_markup = InlineKeyboardMarkup(buttons)
         await query.message.edit_text(
