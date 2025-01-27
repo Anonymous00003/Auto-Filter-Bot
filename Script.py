@@ -242,3 +242,30 @@ User - {}"""
 😚 ᴍʏ ᴛʀᴜsᴛʏ sᴛᴇᴇᴅ: <a href="https://github.com/Mayuri-Chan/pyrofork">ᴘʏʀᴏғᴏʀᴋ</a>
 🙏🏻 ᴍʏ ᴄʀᴇᴀᴛᴏʀ : <a href='https://telegram.me/Psycho440_bot'>ᴘꜱʏᴄʜᴏ</a>
 </b>"""
+
+    RULES_TEXT = """
+🔥 <b>GROUP RULES</b> 🔥
+
+🔷 <b>SEARCH MOVIE WITH CORRECT SPELLING:</b>
+› Avatar 2009 ✅  
+› Avatar Hindi ✅  
+› Avatar Movie ❌  
+› Avatar Hindi Dubbed.. ❌  
+
+🔷 <b>SEARCH WEB SERIES IN THIS FORMAT:</b>
+› Vikings S01 ✅  
+› Vikings S01E01 ✅  
+› Vikings S01 Hindi ✅  
+› Vikings S01 Hindi Dubb. ❌  
+› Vikings Season 1 ❌  
+› Vikings Web Series ❌  
+
+🔷 <b>DON'T DO ANY SELF PROMOTION.</b>
+
+🔷 <b>DON'T SEND ANY KIND OF PHOTO, VIDEO DOCUMENTS, URL ETC..</b>
+
+🔷 <b>DON'T REQUEST ANY THINGS OTHER THAN MOVIE SERIES ANIMES..</b>
+
+⚙️ <b>Note:</b> All messages will be auto-deleted after 10 minutes to avoid copyright issues.
+"""
+    
