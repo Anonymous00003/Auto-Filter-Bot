@@ -524,7 +524,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     elif query.data == "rules":
         await query.message.edit_text(
-            text=RULES_TEXT,
+            text=script.RULES_TEXT,
             parse_mode=enums.ParseMode.HTML,
             disable_web_page_preview=True
     )
