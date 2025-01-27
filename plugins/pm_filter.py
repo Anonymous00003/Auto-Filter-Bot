@@ -501,15 +501,15 @@ async def cb_handler(client: Client, query: CallbackQuery):
         )
     elif query.data == "explore":
         buttons = [[
-            InlineKeyboardButton("📜 Rules", callback_data="rules"), 
-            InlineKeyboardButton("❗ Disclaimer", callback_data="disclaimer")
+            InlineKeyboardButton("ʀᴜʟᴇs 📜", callback_data="rules"), 
+            InlineKeyboardButton("ᴅɪsᴄʟᴀɪᴍᴇʀ ❗", callback_data="disclaimer")
         ], [
-            InlineKeyboardButton("🎬 Latest Releases", url=LATEST_RELEASES_URL)
+            InlineKeyboardButton("ʟᴀᴛᴇsᴛ ʀᴇʟᴇᴀsᴇs 🎬", url=LATEST_RELEASES_URL)
         ], [
-            InlineKeyboardButton("🎭 Genre-based", url=GENRE_BASED_URL),
-            InlineKeyboardButton("📅 Year-based", url=YEAR_BASED_URL)
+            InlineKeyboardButton("ɢᴇɴʀᴇ-ʙᴀsᴇᴅ 🎭", url=GENRE_BASED_URL),
+            InlineKeyboardButton("ʏᴇᴀʀ-ʙᴀsᴇᴅ 📅", url=YEAR_BASED_URL)
         ], [
-            InlineKeyboardButton("📂 All Lists", url=ALL_LISTS_URL)
+            InlineKeyboardButton("ᴀʟʟ ʟɪsᴛ 📂", url=ALL_LISTS_URL)
         ], [
             InlineKeyboardButton("⋞ ʜᴏᴍᴇ", callback_data="start"),
             InlineKeyboardButton("✘ ᴄʟᴏsᴇ ✘", callback_data="close_data")
@@ -524,7 +524,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     elif query.data == "rules":
         await query.message.edit_text(
-            text=Rules_txt,
+            text=RULES_TEXT,
             parse_mode=enums.ParseMode.HTML,
             disable_web_page_preview=True
     )
