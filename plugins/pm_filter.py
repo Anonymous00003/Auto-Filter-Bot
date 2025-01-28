@@ -504,12 +504,10 @@ async def cb_handler(client: Client, query: CallbackQuery):
             InlineKeyboardButton("ʀᴜʟᴇs 📜", callback_data="rules"), 
             InlineKeyboardButton("ᴅɪsᴄʟᴀɪᴍᴇʀ ❗", callback_data="disclaimer")
         ], [
-            InlineKeyboardButton("ʟᴀᴛᴇsᴛ ʀᴇʟᴇᴀsᴇs 🎬", url=LATEST_RELEASES_URL)
+            InlineKeyboardButton("By Genre 🎭", callback_data='by_genre'),
+            InlineKeyboardButton("By Year 📅", callback_data='by_year')
         ], [
-            InlineKeyboardButton("ɢᴇɴʀᴇ-ʙᴀsᴇᴅ 🎭", url=GENRE_BASED_URL),
-            InlineKeyboardButton("ʏᴇᴀʀ-ʙᴀsᴇᴅ 📅", url=YEAR_BASED_URL)
-        ], [
-            InlineKeyboardButton("ᴀʟʟ ʟɪsᴛ 📂", url=ALL_LISTS_URL)
+            InlineKeyboardButton("Search by Movie Name 🔠", callback_data='search_movie_name')
         ], [
             InlineKeyboardButton("⋞ ʜᴏᴍᴇ", callback_data="start"),
             InlineKeyboardButton("✘ ᴄʟᴏsᴇ ✘", callback_data="close_data")
