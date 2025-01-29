@@ -645,7 +645,17 @@ async def auto_filter(client, msg, spoll=False):
         search = message.text
         chat_id = message.chat.id
         settings = await get_settings(chat_id)
+
+        # Record the start time
+        start_time = time.time()
+
+        # Perform the search
         files, offset, total_results = await get_search_results(search)
+
+        # Calculate the time taken
+        time_taken = time.time() - start_time
+        readable_time = get_readable_time(time_taken)
+
         if not files:
             if settings["spell_check"]:
                 return await advantage_spell_chok(msg)
@@ -654,6 +664,7 @@ async def auto_filter(client, msg, spoll=False):
         settings = await get_settings(msg.message.chat.id)
         message = msg.message.reply_to_message  # msg will be callback query
         search, files, offset, total_results = spoll
+
     grp_id = message.chat.id
     req = message.from_user.id if message.from_user else 0
     key = f"{message.chat.id}-{message.id}"
@@ -661,7 +672,60 @@ async def auto_filter(client, msg, spoll=False):
     pre = 'filep' if settings['file_secure'] else 'file'
     temp.CHAT[message.from_user.id] = message.chat.id
     settings = await get_settings(message.chat.id)
+
+    # Get the file name (if files are found)
+    file_name = files[0].file_name if files else "N/A"
+
+    # IMDB details (if available)
+    imdb = await get_poster(search, file=(files[0]).file_name) if settings["imdb"] and files else None
+
+    # Modify the caption to include additional information
+    if imdb:
+        cap = TEMPLATE.format(
+            query=search,
+            title=imdb['title'],
+            votes=imdb['votes'],
+            aka=imdb["aka"],
+            seasons=imdb["seasons"],
+            box_office=imdb['box_office'],
+            localized_title=imdb['localized_title'],
+            kind=imdb['kind'],
+            imdb_id=imdb["imdb_id"],
+            cast=imdb["cast"],
+            runtime=imdb["runtime"],
+            countries=imdb["countries"],
+            certificates=imdb["certificates"],
+            languages=imdb["languages"],
+            director=imdb["director"],
+            writer=imdb["writer"],
+            producer=imdb["producer"],
+            composer=imdb["composer"],
+            cinematographer=imdb["cinematographer"],
+            music_team=imdb["music_team"],
+            distributors=imdb["distributors"],
+            release_date=imdb['release_date'],
+            year=imdb['year'],
+            genres=imdb['genres'],
+            poster=imdb['poster'],
+            plot=imdb['plot'],
+            rating=imdb['rating'],
+            url=imdb['url'],
+            **locals()
+        )
+    else:
+        user_mention = message.from_user.mention()  # Fetch the user's clickable mention
+        cap = f"<b>📂 ʜᴇʀᴇ ɪ ꜰᴏᴜɴᴅ ꜰᴏʀ ʏᴏᴜʀ sᴇᴀʀᴄʜ {search}</b>\n\n" \
+              f"<b>👤 Requested by: {user_mention}</b>\n" \
+              f"<b>⏱ Time taken: {readable_time}</b>\n" \
+              f"<b>📄 File name: {file_name}</b>"
+
+    # Add the auto-delete message if enabled
     del_msg = f"\n\n<b>⚠️ ᴛʜɪs ᴍᴇssᴀɢᴇ ᴡɪʟʟ ʙᴇ ᴀᴜᴛᴏ ᴅᴇʟᴇᴛᴇ ᴀꜰᴛᴇʀ <code>{get_readable_time(DELETE_TIME)}</code> ᴛᴏ ᴀᴠᴏɪᴅ ᴄᴏᴘʏʀɪɢʜᴛ ɪssᴜᴇs</b>" if settings["auto_delete"] else ''
+
+    # Combine the caption with the links and auto-delete message
+    CAP[key] = cap + del_msg
+
+    # Generate links for the files
     links = ""
     if settings["link"]:
         btn = []
@@ -671,7 +735,8 @@ async def auto_filter(client, msg, spoll=False):
         btn = [[InlineKeyboardButton(text=f"🔗 {get_size(file.file_size)}≽ {get_name(file.file_name)}", url=f'https://telegram.dog/{temp.U_NAME}?start=file_{message.chat.id}_{file.file_id}'),]
                for file in files
               ]
-        
+
+    # Add buttons for pagination and other options
     if offset != "":
         if total_results >= 3:
             if not settings["is_verify"]:
@@ -716,88 +781,8 @@ async def auto_filter(client, msg, spoll=False):
                 btn.insert(0,[
                     InlineKeyboardButton("♻️ sᴇɴᴅ ᴀʟʟ", callback_data=f"send_all#{key}")
                 ])
-                         
-    if spoll:
-        m = await msg.message.edit(f"<b><code>{search}</code> ɪs ꜰᴏᴜɴᴅ ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ ꜰᴏʀ ꜰɪʟᴇs 📫</b>")
-        await asyncio.sleep(1.2)
-        await m.delete()
 
-    if offset != "":
-        BUTTONS[key] = search
-        req = message.from_user.id if message.from_user else 0
-        btn.append(
-            [InlineKeyboardButton(text=f"1/{math.ceil(int(total_results) / int(MAX_BTN))}", callback_data="pages"),
-             InlineKeyboardButton(text="ɴᴇxᴛ ⪼", callback_data=f"next_{req}_{key}_{offset}")]
-        )
-        key = f"{message.chat.id}-{message.id}"
-        BUTTONS[key] = search
-        req = message.from_user.id if message.from_user else 0
-        try:
-            offset = int(offset) 
-        except:
-            offset = int(MAX_BTN)
-        
-    # Record the start time
-    start_time = time.time()
-
-    # Perform the search (this is where your search logic is)
-    files, offset, total_results = await get_search_results(search)
-
-    # Calculate the time taken
-    time_taken = time.time() - start_time
-
-    # Format the time taken
-    readable_time = get_readable_time(time_taken)
-
-    # Get the file name (assuming the first file in the list is the one being sent)
-    file_name = files[0].file_name if files else "N/A"
-
-    # Modify the cap variable to include the additional information
-    if imdb:
-    cap = TEMPLATE.format(
-        query=search,
-        title=imdb['title'],
-        votes=imdb['votes'],
-        aka=imdb["aka"],
-        seasons=imdb["seasons"],
-        box_office=imdb['box_office'],
-        localized_title=imdb['localized_title'],
-        kind=imdb['kind'],
-        imdb_id=imdb["imdb_id"],
-        cast=imdb["cast"],
-        runtime=imdb["runtime"],
-        countries=imdb["countries"],
-        certificates=imdb["certificates"],
-        languages=imdb["languages"],
-        director=imdb["director"],
-        writer=imdb["writer"],
-        producer=imdb["producer"],
-        composer=imdb["composer"],
-        cinematographer=imdb["cinematographer"],
-        music_team=imdb["music_team"],
-        distributors=imdb["distributors"],
-        release_date=imdb['release_date'],
-        year=imdb['year'],
-        genres=imdb['genres'],
-        poster=imdb['poster'],
-        plot=imdb['plot'],
-        rating=imdb['rating'],
-        url=imdb['url'],
-        **locals()
-        )
-    else:
-        user_mention = query.from_user.mention()  # Fetch the user's clickable mention
-        cap = f"<b>📂 ʜᴇʀᴇ ɪ ꜰᴏᴜɴᴅ ꜰᴏʀ ʏᴏᴜʀ sᴇᴀʀᴄʜ {search}</b>\n\n" \
-          f"<b>👤 Requested by: {user_mention}</b>\n" \
-          f"<b>⏱ Time taken: {readable_time}</b>\n" \
-          f"<b>📄 File name: {file_name}</b>"
-
-        # Add the auto-delete message if enabled
-        del_msg = f"\n\n<b>⚠️ ᴛʜɪs ᴍᴇssᴀɢᴇ ᴡɪʟʟ ʙᴇ ᴀᴜᴛᴏ ᴅᴇʟᴇᴛᴇ ᴀꜰᴛᴇʀ <code>{get_readable_time(DELETE_TIME)}</code> ᴛᴏ ᴀᴠᴏɪᴅ ᴄᴏᴘʏʀɪɢʜᴛ ɪssᴜᴇs</b>" if settings["auto_delete"] else ''
-
-        # Combine the caption with the links and auto-delete message
-    CAP[key] = cap + links + del_msg
-    
+    # Send the results to the user
     if imdb and imdb.get('poster'):
         try:
             if settings['auto_delete']:
@@ -809,7 +794,7 @@ async def auto_filter(client, msg, spoll=False):
                 except:
                     pass
             else:
-                await message.reply_photo(photo=imdb.get('poster'), caption=cap[:1024] + links + del_msg, reply_markup=InlineKeyboardMarkup(btn))                    
+                await message.reply_photo(photo=imdb.get('poster'), caption=cap[:1024] + links + del_msg, reply_markup=InlineKeyboardMarkup(btn))
         except (MediaEmpty, PhotoInvalidDimensions, WebpageMediaEmpty):
             pic = imdb.get('poster')
             poster = pic.replace('.jpg', "._V1_UX360.jpg")
@@ -843,7 +828,7 @@ async def auto_filter(client, msg, spoll=False):
             await message.delete()
             await d.delete()
         else:
-            k=await message.reply_text(text=cap + links + del_msg, disable_web_page_preview=True, parse_mode=enums.ParseMode.HTML, reply_markup=InlineKeyboardMarkup(btn), reply_to_message_id=message.id)
+            k = await message.reply_text(text=cap + links + del_msg, disable_web_page_preview=True, parse_mode=enums.ParseMode.HTML, reply_markup=InlineKeyboardMarkup(btn), reply_to_message_id=message.id)
             if settings['auto_delete']:
                 await asyncio.sleep(DELETE_TIME)
                 await k.delete()
