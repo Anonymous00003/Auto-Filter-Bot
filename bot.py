@@ -1,5 +1,10 @@
 from pyrogram import Client, __version__
 from database.ia_filterdb import Media
+# ======= ADD THESE 4 NEW IMPORTS ======= #
+import requests
+import re
+import os
+from urllib.parse import unquote
 from database.users_chats_db import db
 from info import API_ID, API_HASH, ADMINS, BOT_TOKEN, LOG_CHANNEL, PORT, SUPPORT_GROUP
 from utils import temp
@@ -12,6 +17,28 @@ from aiohttp import web
 from plugins import web_server, check_expired_premium
 import time
 
+    # ======= ADD THIS NEW FUNCTION ======= #
+    async def download_file(url, user_id, file_name=None):
+    try:
+        response = requests.get(url, stream=True)
+        if response.status_code == 200:
+            original_name = unquote(url.split("/")[-1].split("?")[0])
+            ext = original_name.split('.')[-1] if '.' in original_name else ''
+            final_name = f"{file_name}.{ext}" if file_name else original_name
+            file_path = f"downloads/{user_id}_{final_name}"
+            
+            if not os.path.exists("downloads"):
+                os.makedirs("downloads")
+                
+            with open(file_path, 'wb') as f:
+                for chunk in response.iter_content(chunk_size=1024):
+                    if chunk: f.write(chunk)
+            return file_path
+        return None
+    except Exception as e:
+        print(f"Download error: {e}")
+        return None
+
 class Bot(Client):
     def __init__(self):
         super().__init__(
@@ -23,6 +50,40 @@ class Bot(Client):
             workers=150,
             plugins={"root": "plugins"}
         )
+
+    # ======= ADD THIS NEW METHOD ======= #
+async def handle_url_upload(self, message):
+    user_id = message.from_user.id
+    command_text = message.text.split(" ", 1)[1] if len(message.text.split()) > 1 else ""
+    
+    url_match = re.search(r'(https?://\S+)', command_text)
+    rename_match = re.search(r'rename=([^\s]+)', command_text)
+    
+    if not url_match:
+        await message.reply("❗ Provide URL like: /upload https://example.com/file.pdf rename=myfile")
+        return
+    
+    url = url_match.group(1)
+    custom_name = rename_match.group(1) if rename_match else None
+    
+    user = await db.get_user(user_id)
+    if not user.get("is_premium", False):
+        last_used = user.get("last_used", datetime.min)
+        if (datetime.now() - last_used).total_seconds() < 3600:
+            remaining = 3600 - int((datetime.now() - last_used).total_seconds())
+            await message.reply(f"⏳ Free users have 1-hour cooldown! Wait {remaining//60} mins or /upgrade")
+            return
+    
+    downloaded_file = await download_file(url, user_id, custom_name)
+    if downloaded_file:
+        await message.reply_document(
+            document=downloaded_file,
+            caption=f"📤 Uploaded by {message.from_user.mention}"
+        )
+        os.remove(downloaded_file)
+        await db.update_user(user_id, {"last_used": datetime.now()})
+    else:
+        await message.reply("❌ Failed to process your request")
 
     async def start(self):
         st = time.time()
@@ -55,6 +116,8 @@ class Bot(Client):
             await self.send_message(chat_id=admin, text=f"<b>✅ ʙᴏᴛ ʀᴇsᴛᴀʀᴛᴇᴅ\n🕥 ᴛɪᴍᴇ ᴛᴀᴋᴇɴ - <code>{seconds} sᴇᴄᴏɴᴅs</code></b>")
 
     async def stop(self, *args):
+        # ======= ADD THIS LINE ======= #
+        self.add_handler(MessageHandler(self.handle_url_upload, filters.command("upload") & filters.private))
         await super().stop()
         print("Bot stopped.")
 
