@@ -141,6 +141,7 @@ async def handle_rename(client, message):
         await process_download(client, message, url, new_filename)
         # Reset user state
         del user_data[user_id]['awaiting_rename']
+        del user_data[user_id]['url']  # Add this line to fully reset
 
 
 async def progress_bar(current, total, start_time):
