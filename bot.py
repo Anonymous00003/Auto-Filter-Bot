@@ -16,7 +16,6 @@ import aiohttp
 
 class Bot(Client):
     def __init__(self):
-        self.downloads_dir = "downloads"
         super().__init__(
             name='aks',
             api_id=API_ID,
@@ -26,6 +25,7 @@ class Bot(Client):
             workers=150,
             plugins={"root": "plugins"}
         )
+        self.downloads_dir = "downloads"
 
     async def start(self):
         st = time.time()
