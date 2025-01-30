@@ -69,34 +69,45 @@ async def delete_thumbnail(client, message):
 
 async def process_download(client, query, url, filename):
     start_time = time.time()
-    msg = await query.message.reply_text("Starting download...")
+    msg = await query.message.reply_text("⏳ Starting download...")
     
     try:
         with requests.get(url, stream=True) as r:
             r.raise_for_status()
             total_size = int(r.headers.get('content-length', 0))
             downloaded = 0
+            last_update = 0
             
             with open(filename, 'wb') as f:
                 for chunk in r.iter_content(chunk_size=8192):
                     f.write(chunk)
                     downloaded += len(chunk)
+                    current_time = time.time()
                     
                     # Update progress every 2 seconds
-                    if (time.time() - start_time) % 2 < 0.1:
+                    if current_time - last_update >= 2:
                         progress = await progress_bar(downloaded, total_size, start_time)
-                        await msg.edit_text(f"Downloading...\n{progress}")
+                        await msg.edit_text(f"⬇️ Downloading...\n{progress}")
+                        last_update = current_time
                         
-            await msg.edit_text("Uploading to Telegram...")
+            await msg.edit_text("📤 Uploading to Telegram...")
             thumbnail = await db.get_thumbnail(query.from_user.id)
-    await client.send_document(
-    chat_id=query.message.chat.id,
-    document=filename,
-    file_name=filename,
-    thumb=thumbnail or None,
-    progress=progress_bar,
-    progress_args=(start_time,)
-)
+            
+            # Upload file with progress
+            await client.send_document(
+                chat_id=query.message.chat.id,
+                document=filename,
+                file_name=filename,
+                thumb=thumbnail,
+                progress=progress_bar,
+                progress_args=(start_time,)
+            )
+            
+    except Exception as e:
+        await msg.edit_text(f"❌ Download failed: {str(e)}")
+    finally:
+        if os.path.exists(filename):
+            os.remove(filename)
             
     except Exception as e:
         await msg.edit_text(f"Download failed: {str(e)}")
