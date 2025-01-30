@@ -20,6 +20,7 @@ from movie import movies
 import asyncio
 from pyrogram.types import Message
 from pyrogram.errors import MessageDeleteForbidden
+from urllib.parse import urlparse
 
 lock = asyncio.Lock()
 
@@ -28,6 +29,24 @@ logger = logging.getLogger(__name__)
 BUTTONS = {}
 FILES_ID = {}
 CAP = {}
+
+
+async def progress_bar(current, total, start_time):
+    elapsed_time = time.time() - start_time
+    speed = current / elapsed_time if elapsed_time > 0 else 0
+    eta = (total - current) / speed if speed > 0 else 0
+    
+    percentage = current * 100 / total
+    filled_length = int(30 * current // total)
+    bar = '█' * filled_length + '—' * (30 - filled_length)
+    
+    progress = f"""
+📦 Progress: [{bar}] {percentage:.1f}%
+📊 Size: {humanize.naturalsize(current)} / {humanize.naturalsize(total)}
+🚀 Speed: {humanize.naturalsize(speed)}/s
+⏳ ETA: {get_readable_time(eta)}
+"""
+    return progress
 
 
 @Client.on_message(filters.private & ~filters.command("url"))
