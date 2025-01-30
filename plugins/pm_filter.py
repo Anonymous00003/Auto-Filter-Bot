@@ -91,6 +91,13 @@ async def process_download(client, query, url, filename):
                 progress=progress_bar,
                 progress_args=(start_time,)
             )
+                # In your existing file sending code:
+thumbnail = await db.get_thumbnail(message.from_user.id)
+await message.reply_document(
+    document=file_path,
+    thumb=thumbnail or None,  # Use custom thumbnail if exists
+    caption=caption
+            )
             
     except Exception as e:
         await msg.edit_text(f"Download failed: {str(e)}")
