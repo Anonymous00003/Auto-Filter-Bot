@@ -24,3 +24,4 @@ Pillow
 speedtest-cli
 psutil
 shortzy
+aiohttp
