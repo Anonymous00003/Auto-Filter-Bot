@@ -33,13 +33,6 @@ CAP = {}
 @Client.on_message(filters.private & ~filters.command("url"))
 async def pm_block(client, message):
     await message.reply("⚠️ I can't work in PM")
-    
-@Client.on_message(filters.group & filters.text & filters.incoming)
-async def group_search(client, message):
-    if PM_SEARCH:
-        await auto_filter(client, message)  
-    else:
-        await message.reply_text("⚠️ ꜱᴏʀʀʏ ɪ ᴄᴀɴ'ᴛ ᴡᴏʀᴋ ɪɴ ᴘᴍ")
 
     
 @Client.on_message(filters.group & filters.text & filters.incoming)
