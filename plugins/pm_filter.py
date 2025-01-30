@@ -17,6 +17,9 @@ import csv
 import requests
 from io import StringIO
 from movie import movies
+import asyncio
+from pyrogram.types import Message
+from pyrogram.errors import MessageDeleteForbidden
 
 lock = asyncio.Lock()
 
