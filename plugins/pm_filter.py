@@ -31,6 +31,59 @@ FILES_ID = {}
 CAP = {}
 
 
+async def process_download(client, query, url, filename):
+    start_time = time.time()
+    msg = await query.message.reply_text("Starting download...")
+    
+    try:
+        with requests.get(url, stream=True) as r:
+            r.raise_for_status()
+            total_size = int(r.headers.get('content-length', 0))
+            downloaded = 0
+            
+            with open(filename, 'wb') as f:
+                for chunk in r.iter_content(chunk_size=8192):
+                    f.write(chunk)
+                    downloaded += len(chunk)
+                    
+                    # Update progress every 2 seconds
+                    if (time.time() - start_time) % 2 < 0.1:
+                        progress = await progress_bar(downloaded, total_size, start_time)
+                        await msg.edit_text(f"Downloading...\n{progress}")
+                        
+            await msg.edit_text("Uploading to Telegram...")
+            await client.send_document(
+                chat_id=query.message.chat.id,
+                document=filename,
+                file_name=filename,
+                progress=progress_bar,
+                progress_args=(start_time,)
+            )
+            
+    except Exception as e:
+        await msg.edit_text(f"Download failed: {str(e)}")
+    finally:
+        if os.path.exists(filename):
+            os.remove(filename)
+
+
+@Client.on_callback_query(filters.regex(r"^(default|rename)_"))
+async def handle_download_buttons(client, query):
+    action, url = query.data.split('_', 1)
+    await query.answer()
+    
+    # Store URL in user data
+    query.message.chat.id = query.from_user.id  # For PM handling
+    context.user_data['url'] = url
+    
+    if action == "default":
+        filename = os.path.basename(urlparse(url).path)
+        await process_download(client, query, url, filename)
+    elif action == "rename":
+        await query.edit_message_text("Please send the new filename:")
+        context.user_data['awaiting_rename'] = True
+
+
 async def progress_bar(current, total, start_time):
     elapsed_time = time.time() - start_time
     speed = current / elapsed_time if elapsed_time > 0 else 0
@@ -66,10 +119,17 @@ async def group_search(client, message):
             return
         
         elif re.findall(r'https?://\S+|www\.\S+|t\.me/\S+', message.text):
-            if await is_check_admin(client, message.chat.id, message.from_user.id):
-                return
-            await message.delete()
-            return await message.reply('<b>‼️ ᴡʜʏ ʏᴏᴜ ꜱᴇɴᴅ ʜᴇʀᴇ ʟɪɴᴋ\nʟɪɴᴋ ɴᴏᴛ ᴀʟʟᴏᴡᴇᴅ ʜᴇʀᴇ 🚫</b>')
+    url = message.text
+    keyboard = [
+        [
+            InlineKeyboardButton("Default Name", callback_data=f"default_{url}"),
+            InlineKeyboardButton("Rename File", callback_data=f"rename_{url}")
+        ]
+        ]
+            await message.reply_text(
+        "Choose download option:",
+        reply_markup=InlineKeyboardMarkup(keyboard)
+         )
 
         elif '@admin' in message.text.lower() or '@admins' in message.text.lower():
             if await is_check_admin(client, message.chat.id, message.from_user.id):
