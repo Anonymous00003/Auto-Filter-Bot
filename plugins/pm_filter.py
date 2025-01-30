@@ -1,4 +1,6 @@
 # © TechifyBots (Rahul)
+import humanize  # For file size formatting
+import os        # For file operations
 import time
 import asyncio
 import re
@@ -26,6 +28,8 @@ lock = asyncio.Lock()
 
 logger = logging.getLogger(__name__)
 
+# Global storage for user states
+user_data = {}
 BUTTONS = {}
 FILES_ID = {}
 CAP = {}
@@ -111,16 +115,16 @@ async def handle_download_buttons(client, query):
     action, url = query.data.split('_', 1)
     await query.answer()
     
-    # Store URL in user data
-    query.message.chat.id = query.from_user.id  # For PM handling
-    context.user_data['url'] = url
+    # Store URL in global user_data
+    user_id = query.from_user.id
+    user_data[user_id] = {'url': url}
     
     if action == "default":
         filename = os.path.basename(urlparse(url).path)
         await process_download(client, query, url, filename)
     elif action == "rename":
         await query.edit_message_text("Please send the new filename:")
-        context.user_data['awaiting_rename'] = True
+        user_data[user_id]['awaiting_rename'] = True  # Track rename state
 
 
 async def progress_bar(current, total, start_time):
@@ -182,11 +186,11 @@ async def group_search(client, message):
             InlineKeyboardButton("Default Name", callback_data=f"default_{url}"),
             InlineKeyboardButton("Rename File", callback_data=f"rename_{url}")
         ]
-        ]
-            await message.reply_text(
+    ]
+    await message.reply_text(
         "Choose download option:",
         reply_markup=InlineKeyboardMarkup(keyboard)
-         )
+    )
 
         elif '@admin' in message.text.lower() or '@admins' in message.text.lower():
             if await is_check_admin(client, message.chat.id, message.from_user.id):
