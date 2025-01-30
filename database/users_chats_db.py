@@ -49,7 +49,25 @@ class Database:
                 ban_reason=""
             )
         )
+    # Add these methods to your Database class
 
+async def set_thumbnail(self, user_id: int, thumbnail: str):
+    await self.col.update_one(
+        {'_id': user_id},
+        {'$set': {'thumbnail': thumbnail}},
+        upsert=True
+    )
+
+    async def get_thumbnail(self, user_id: int):
+         user = await self.col.find_one({'_id': user_id})
+         return user.get('thumbnail') if user else None
+
+    async def delete_thumbnail(self, user_id: int):
+        await self.col.update_one(
+        {'_id': user_id},
+        {'$unset': {'thumbnail': ""}}
+    )
+    
     async def get_settings(self, id):
         chat = await self.grp.find_one({'id':int(id)})
         if chat:
