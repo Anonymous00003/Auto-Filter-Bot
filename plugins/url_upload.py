@@ -21,7 +21,7 @@ async def download_file(url, message):
                 await message.reply("Failed to download file. Invalid URL or server error.")
                 return None
 
-@Client.on_message(filters.command("url"))
+@Client.on_message(filters.command("url") & (filters.private | filters.group))
 async def handle_url_upload(client, message: Message):
     try:
         # Check if URL provided
