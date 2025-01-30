@@ -716,8 +716,8 @@ async def auto_filter(client, msg, spoll=False):
             **locals()
         )
     else:
-    user_mention = message.from_user.mention()  # Fetch the user's clickable mention
-    cap = f"<b>Tʜᴇ Rᴇꜱᴜʟᴛꜱ Fᴏʀ ☞ {search}</b>\n\n" \
+        user_mention = message.from_user.mention()  # Fetch the user's clickable mention
+        cap = f"<b>Tʜᴇ Rᴇꜱᴜʟᴛꜱ Fᴏʀ ☞ {search}</b>\n\n" \
           f"<b>Rᴇǫᴜᴇsᴛᴇᴅ ʙʏ ☞ {user_mention}</b>\n" \
           f"<b>ʀᴇsᴜʟᴛ sʜᴏᴡ ɪɴ ☞ {readable_time} sᴇᴄᴏɴᴅs</b>\n" \
           f"<b>ᴘᴏᴡᴇʀᴇᴅ ʙʏ ☞ MovieHub</b>\n\n" \
