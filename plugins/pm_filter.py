@@ -153,24 +153,27 @@ async def progress_bar(current, total, start_time):
 @Client.on_message(filters.command("url"))
 async def url_command(client, message):
     if message.chat.type == enums.ChatType.PRIVATE:
-        # Delete previous warnings
-        await client.delete_messages(
-            chat_id=message.chat.id,
-            message_ids=message.id
-        )
-        # Send single warning with buttons
+        await client.delete_messages(message.chat.id, message.id)
         buttons = [[
             InlineKeyboardButton("Join Group", url="YOUR_GROUP_LINK"),
             InlineKeyboardButton("Close", callback_data="close_data")
         ]]
-        await message.reply_text(
-            "⚠️ I can only work in groups!",
-            reply_markup=InlineKeyboardMarkup(buttons)
-        )
+        await message.reply_text("⚠️ I can only work in groups!", reply_markup=InlineKeyboardMarkup(buttons))
         return
     
-    # Your existing /url command logic here
-    await message.reply_text("Processing URL...")
+    # Check if URL is provided in group
+    if not message.reply_to_message or not message.reply_to_message.text:
+        await message.reply_text("🔗 Reply to a message containing a URL with /url")
+        return
+    
+    url = message.reply_to_message.text
+    keyboard = [
+        [
+            InlineKeyboardButton("Default Name", callback_data=f"default_{url}"),
+            InlineKeyboardButton("Rename File", callback_data=f"rename_{url}")
+        ]
+    ]
+    await message.reply_text("Choose download option:", reply_markup=InlineKeyboardMarkup(keyboard))
 
     
 @Client.on_message(filters.group & filters.text & filters.incoming)
