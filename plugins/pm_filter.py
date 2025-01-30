@@ -31,6 +31,38 @@ FILES_ID = {}
 CAP = {}
 
 
+# Add these command handlers anywhere in your code
+
+@Client.on_message(filters.command(["setthumb"]))
+async def set_thumbnail(client, message):
+    user_id = message.from_user.id
+    if message.reply_to_message and message.reply_to_message.photo:
+        thumbnail = message.reply_to_message.photo.file_id
+        await db.set_thumbnail(user_id, thumbnail)
+        await message.reply("✅ **Thumbnail saved successfully!**")
+    else:
+        await message.reply("❗ **Reply to a photo with /setthumb**")
+
+@Client.on_message(filters.command(["viewthumb"]))
+async def view_thumbnail(client, message):
+    user_id = message.from_user.id
+    thumbnail = await db.get_thumbnail(user_id)
+    if thumbnail:
+        await client.send_photo(
+            chat_id=message.chat.id,
+            photo=thumbnail,
+            caption="**Your Current Thumbnail**"
+        )
+    else:
+        await message.reply("❌ **No thumbnail set!**")
+
+@Client.on_message(filters.command(["delthumb"]))
+async def delete_thumbnail(client, message):
+    user_id = message.from_user.id
+    await db.delete_thumbnail(user_id)
+    await message.reply("🗑️ **Thumbnail deleted successfully!**")
+
+
 async def process_download(client, query, url, filename):
     start_time = time.time()
     msg = await query.message.reply_text("Starting download...")
