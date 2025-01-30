@@ -716,14 +716,16 @@ async def auto_filter(client, msg, spoll=False):
             **locals()
         )
     else:
-        user_mention = message.from_user.mention()  # Fetch the user's clickable mention
-        cap = f"<b>📂 ʜᴇʀᴇ ɪ ꜰᴏᴜɴᴅ ꜰᴏʀ ʏᴏᴜʀ sᴇᴀʀᴄʜ {search}</b>\n\n" \
-              f"<b>👤 Requested by: {user_mention}</b>\n" \
-              f"<b>⏱ Time taken: {readable_time}</b>\n" \
-              f"<b>📄 File name: {file_name}</b>"
+    user_mention = message.from_user.mention()  # Fetch the user's clickable mention
+    cap = f"<b>Tʜᴇ Rᴇꜱᴜʟᴛꜱ Fᴏʀ ☞ {search}</b>\n\n" \
+          f"<b>Rᴇǫᴜᴇsᴛᴇᴅ ʙʏ ☞ {user_mention}</b>\n" \
+          f"<b>ʀᴇsᴜʟᴛ sʜᴏᴡ ɪɴ ☞ {readable_time} sᴇᴄᴏɴᴅs</b>\n" \
+          f"<b>ᴘᴏᴡᴇʀᴇᴅ ʙʏ ☞ MovieHub</b>\n\n" \
+          f"<b>⚠️ ᴀꜰᴛᴇʀ {get_readable_time(DELETE_TIME)} ᴛʜɪꜱ ᴍᴇꜱꜱᴀɢᴇ ᴡɪʟʟ ʙᴇ ᴀᴜᴛᴏᴍᴀᴛɪᴄᴀʟʟʏ ᴅᴇʟᴇᴛᴇᴅ 🗑️</b>\n\n" \
+          f"<b>🍿 Yᴏᴜʀ Mᴏᴠɪᴇ Fɪʟᴇs 👇</b>"
 
     # Add the auto-delete message if enabled
-    del_msg = f"\n\n<b>⚠️ ᴛʜɪs ᴍᴇssᴀɢᴇ ᴡɪʟʟ ʙᴇ ᴀᴜᴛᴏ ᴅᴇʟᴇᴛᴇ ᴀꜰᴛᴇʀ <code>{get_readable_time(DELETE_TIME)}</code> ᴛᴏ ᴀᴠᴏɪᴅ ᴄᴏᴘʏʀɪɢʜᴛ ɪssᴜᴇs</b>" if settings["auto_delete"] else ''
+    del_msg = ''  # This removes the old auto-delete message
 
     # Combine the caption with the links and auto-delete message
     CAP[key] = cap + del_msg
