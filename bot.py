@@ -11,9 +11,12 @@ import pytz
 from aiohttp import web
 from plugins import web_server, check_expired_premium
 import time
+import os
+import aiohttp
 
 class Bot(Client):
     def __init__(self):
+        self.downloads_dir = "downloads"
         super().__init__(
             name='aks',
             api_id=API_ID,
