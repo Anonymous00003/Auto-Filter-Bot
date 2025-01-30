@@ -126,6 +126,16 @@ async def handle_download_buttons(client, query):
         await query.edit_message_text("Please send the new filename:")
         user_data[user_id]['awaiting_rename'] = True  # Track rename state
 
+@Client.on_message(filters.private & filters.text)
+async def handle_rename(client, message):
+    user_id = message.from_user.id
+    if user_data.get(user_id, {}).get('awaiting_rename'):
+        new_filename = message.text.strip()
+        url = user_data[user_id]['url']
+        await process_download(client, message, url, new_filename)
+        # Reset user state
+        del user_data[user_id]['awaiting_rename']
+
 
 async def progress_bar(current, total, start_time):
     elapsed_time = time.time() - start_time
