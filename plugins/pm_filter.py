@@ -102,9 +102,27 @@ async def progress_bar(current, total, start_time):
     return progress
 
 
-@Client.on_message(filters.private & ~filters.command("url"))
-async def pm_block(client, message):
-    await message.reply("⚠️ I can't work in PM")
+@Client.on_message(filters.command("url"))
+async def url_command(client, message):
+    if message.chat.type == enums.ChatType.PRIVATE:
+        # Delete previous warnings
+        await client.delete_messages(
+            chat_id=message.chat.id,
+            message_ids=message.id
+        )
+        # Send single warning with buttons
+        buttons = [[
+            InlineKeyboardButton("Join Group", url="YOUR_GROUP_LINK"),
+            InlineKeyboardButton("Close", callback_data="close_data")
+        ]]
+        await message.reply_text(
+            "⚠️ I can only work in groups!",
+            reply_markup=InlineKeyboardMarkup(buttons)
+        )
+        return
+    
+    # Your existing /url command logic here
+    await message.reply_text("Processing URL...")
 
     
 @Client.on_message(filters.group & filters.text & filters.incoming)
