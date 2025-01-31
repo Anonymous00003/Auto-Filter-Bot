@@ -85,10 +85,10 @@ async def download_file_with_progress(client, url, message):
             url += "?download"
         headers = { ... }  # Add your headers here
 
-async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession() as session:
             async with session.get(url, headers=headers) as response:
                 if response.status != 200:
-     await message.reply_text(f"Error: HTTP {response.status}")
+                    await message.reply_text(f"Error: HTTP {response.status}")
                     return None
 
                 # Get file size and name
@@ -102,14 +102,14 @@ async with aiohttp.ClientSession() as session:
                 start_time = time.time()  # 🕒 Start timer
                 
                 # Download chunks
-async for chunk in response.content.iter_chunked(1024):
+                async for chunk in response.content.iter_chunked(1024):
                     chunks.append(chunk)
                     downloaded += len(chunk)
                     
                     # Update progress every 1 second
-    if (time.time() - start_time) > 1:
+                    if (time.time() - start_time) > 1:
                         progress = await progress_bar(downloaded, file_size, start_time)
-     await message.edit_text(f"⬇️ Downloading...\n{progress}")
+                        await message.edit_text(f"⬇️ Downloading...\n{progress}")
                         start_time = time.time()  # Reset timer
 
                 # Combine chunks into a file
