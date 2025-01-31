@@ -39,6 +39,14 @@ FILES_ID = {}
 CAP = {}
 
 
+async def upload_progress(current, total, message, start_time):
+    progress = await progress_bar(current, total, start_time)
+    try:
+        await message.edit_text(f"📤 Uploading...\n{progress}")  # Update message
+    except MessageNotModified:
+        pass  # Ignore if the message is already updated
+
+
 # Add these command handlers anywhere in your code
 
 @Client.on_message(filters.command(["setthumb"]))
@@ -73,80 +81,81 @@ async def delete_thumbnail(client, message):
 
 async def download_file_with_progress(client, url, message):
     try:
-        if "?download" not in url:
+    if "?download" not in url:
             url += "?download"
-        headers = { ... }
-        
-        async with aiohttp.ClientSession() as session:  # Proper indentation
+        headers = { ... }  # Add your headers here
+
+async with aiohttp.ClientSession() as session:
             async with session.get(url, headers=headers) as response:
                 if response.status != 200:
-                    await message.reply_text(f"Error: HTTP {response.status}")
+     await message.reply_text(f"Error: HTTP {response.status}")
                     return None
-                # Rest of the code
-                   
-                   # Get file size
-                   file_size = int(response.headers.get("Content-Length", 0))
-                   file_name = response.headers.get("Content-Disposition", "").split("filename=")[-1].strip('"')
-                   
-                   # Download with progress
-                   downloaded = 0
-                   chunks = []
+
+                # Get file size and name
+                file_size = int(response.headers.get("Content-Length", 0))
+                content_disposition = response.headers.get("Content-Disposition", "")
+                file_name = content_disposition.split("filename=")[-1].strip('"') if "filename=" in content_disposition else "file"
+
+                # Start tracking progress
+                downloaded = 0
+                chunks = []
+                start_time = time.time()  # 🕒 Start timer
+                
+                # Download chunks
 async for chunk in response.content.iter_chunked(1024):
-                       chunks.append(chunk)
-                       downloaded += len(chunk)
-                       progress = (downloaded / file_size) * 100
-     await message.edit_text(f"Downloading... {progress:.2f}%")
-                   
-                   # Combine chunks into a single file
-                   file_data = b"".join(chunks)
-                   return file_name, file_data
-                   
-       except Exception as e:
-      await message.reply_text(f"Error: {str(e)}")
-           return None
+                    chunks.append(chunk)
+                    downloaded += len(chunk)
+                    
+                    # Update progress every 1 second
+    if (time.time() - start_time) > 1:
+                        progress = await progress_bar(downloaded, file_size, start_time)
+     await message.edit_text(f"⬇️ Downloading...\n{progress}")
+                        start_time = time.time()  # Reset timer
+
+                # Combine chunks into a file
+                file_data = b"".join(chunks)
+                return file_name, file_data
+
+    except Exception as e:
+        await message.reply_text(f"❌ Error: {str(e)}")
+        return None
 
 
 async def process_download(client, query, url, filename):
-    start_time = time.time()
     msg = await query.message.reply_text("⏳ Starting download...")
-    
     try:
-        with requests.get(url, stream=True) as r:
-            r.raise_for_status()
-            total_size = int(r.headers.get('content-length', 0))
-            downloaded = 0
-            last_update = 0
-            
-            with open(filename, 'wb') as f:
-                for chunk in r.iter_content(chunk_size=8192):
-                    f.write(chunk)
-                    downloaded += len(chunk)
-                    current_time = time.time()
-                    
-                    # Update progress every 2 seconds
-                    if current_time - last_update >= 2:
-                        progress = await progress_bar(downloaded, total_size, start_time)
-                        await msg.edit_text(f"⬇️ Downloading...\n{progress}")
-                        last_update = current_time
-                        
-      await msg.edit_text("📤 Uploading to Telegram...")
-            thumbnail = await db.get_thumbnail(query.from_user.id)
-            
-            # Upload file with progress
-      await client.send_document(
-                chat_id=query.message.chat.id,
-                document=filename,
-                file_name=filename,
-                thumb=thumbnail,
-                progress=progress_bar,
-                progress_args=(start_time,)
-            )
-            
+        # Use the new async download function
+        result = await download_file_with_progress(client, url, msg)
+        if not result:
+            return
+
+        file_name, file_data = result
+        
+        # Save the downloaded file
+        with open(filename, 'wb') as f:
+            f.write(file_data)
+
+        # Upload to Telegram with progress
+        await msg.edit_text("📤 Uploading to Telegram...")
+        thumbnail = await db.get_thumbnail(query.from_user.id)
+        
+        # Upload with progress bar
+        await client.send_document(
+            chat_id=query.message.chat.id,
+            document=filename,
+            file_name=file_name,
+            thumb=thumbnail,
+            progress=upload_progress,  # New progress handler
+            progress_args=(msg, time.time())
+        )
+        
+        await msg.delete()  # Delete progress message after upload
+
     except Exception as e:
-      await msg.edit_text(f"❌ Download failed: {str(e)}")
+        await msg.edit_text(f"❌ Error: {str(e)}")
     finally:
         if os.path.exists(filename):
-            os.remove(filename)
+            os.remove(filename)  # Clean up the file
             
     except Exception as e:
       await msg.edit_text(f"Download failed: {str(e)}")
@@ -158,7 +167,7 @@ async def process_download(client, query, url, filename):
 @Client.on_callback_query(filters.regex(r"^(default|rename)_"))
 async def handle_download_buttons(client, query):
     action, url = query.data.split('_', 1)
-      await query.answer()
+    await query.answer()  # ✅ Correct indentation!
     
     # Store URL in global user_data
     user_id = query.from_user.id
