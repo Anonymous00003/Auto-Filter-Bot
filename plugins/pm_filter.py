@@ -72,22 +72,17 @@ async def delete_thumbnail(client, message):
 
 
 async def download_file_with_progress(client, url, message):
-       try:
-           # Append ?download if missing
-           if "?download" not in url:
-               url += "?download"
-           
-           # Headers to mimic a browser
-           headers = {
-               "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-               "Referer": "https://pixeldra.in/"
-           }
-           
-async with aiohttp.ClientSession() as session:
-async with session.get(url, headers=headers) as response:
-            if response.status != 200:
-     await message.reply_text(f"Failed to download. HTTP Error {response.status}")
-                       return None
+    try:
+        if "?download" not in url:
+            url += "?download"
+        headers = { ... }
+        
+        async with aiohttp.ClientSession() as session:  # Proper indentation
+            async with session.get(url, headers=headers) as response:
+                if response.status != 200:
+                    await message.reply_text(f"Error: HTTP {response.status}")
+                    return None
+                # Rest of the code
                    
                    # Get file size
                    file_size = int(response.headers.get("Content-Length", 0))
