@@ -81,7 +81,7 @@ async def delete_thumbnail(client, message):
 
 async def download_file_with_progress(client, url, message):
     try:
-    if "?download" not in url:
+        if "?download" not in url:
             url += "?download"
         headers = { ... }  # Add your headers here
 
