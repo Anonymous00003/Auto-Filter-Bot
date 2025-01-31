@@ -115,11 +115,10 @@ async def set_thumbnail(self, user_id: int, thumbnail: str):
         await self.grp.delete_many({'id': int(id)})
         
     async def get_banned(self):
-        users = self.col.find({'ban_status.is_banned': True})
-        chats = self.grp.find({'chat_status.is_disabled': True})
-        b_chats = [chat['id'] async for chat in chats]
-        b_users = [user['id'] async for user in users]
-        return b_users, b_chats
+        """Fetch banned users and chats."""
+        users = await self.users.find({'banned': True}).to_list(None)
+        chats = await self.chats.find({'banned': True}).to_list(None)
+        return users, chats
     
     async def add_chat(self, chat, title):
         chat = self.new_group(chat, title)
