@@ -81,9 +81,9 @@ async def add_join_req(self, id):
         await self.req.insert_one({'id': id})
 
 async def del_join_req(self):
-        await self.req.drop()
+    await self.req.drop()
 
-    def new_group(self, id, title):
+def new_group(self, id, title):
         return dict(
             id = id,
             title = title,
@@ -95,7 +95,7 @@ async def del_join_req(self):
     
 async def add_user(self, id, name):
         user = self.new_user(id, name)
-        await self.col.insert_one(user)
+    await self.col.insert_one(user)
     
 async def is_user_exist(self, id):
         user = await self.col.find_one({'id':int(id)})
@@ -109,7 +109,7 @@ async def get_all_users(self):
         return self.col.find({})
 
 async def delete_user(self, user_id):
-        await self.col.delete_many({'id': int(user_id)})
+    await self.col.delete_many({'id': int(user_id)})
 
 async def delete_chat(self, id):
     await self.grp.delete_many({'id': int(id)})
@@ -265,7 +265,7 @@ async def has_premium_access(self, user_id):
                 await self.users.update_one({"id": user_id}, {"$set": {"expiry_time": None}})
         return False
         
-    async def update_one(self, filter_query, update_data):
+async def update_one(self, filter_query, update_data):
         try:
             result = await self.users.update_one(filter_query, update_data)
             return result.matched_count == 1
@@ -273,14 +273,14 @@ async def has_premium_access(self, user_id):
             print(f"Error updating document: {e}")
             return False
 
-    async def get_expired(self, current_time):
+async def get_expired(self, current_time):
         expired_users = []
         if data := self.users.find({"expiry_time": {"$lt": current_time}}):
             async for user in data:
                 expired_users.append(user)
         return expired_users
 
-    async def remove_premium_access(self, user_id):
+async def remove_premium_access(self, user_id):
         return await self.update_one(
             {"id": user_id}, {"$set": {"expiry_time": None}}
         )
