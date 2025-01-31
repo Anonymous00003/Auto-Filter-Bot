@@ -1,6 +1,10 @@
 # © TechifyBots (Rahul)
 import humanize  # For file size formatting
 import os        # For file operations
+import aiohttp
+import asyncio
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from upload import upload_file
 import time
 import asyncio
 import re
@@ -67,6 +71,46 @@ async def delete_thumbnail(client, message):
     await message.reply("🗑️ **Thumbnail deleted successfully!**")
 
 
+async def download_file_with_progress(client, url, message):
+       try:
+           # Append ?download if missing
+           if "?download" not in url:
+               url += "?download"
+           
+           # Headers to mimic a browser
+           headers = {
+               "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+               "Referer": "https://pixeldra.in/"
+           }
+           
+async with aiohttp.ClientSession() as session:
+async with session.get(url, headers=headers) as response:
+            if response.status != 200:
+     await message.reply_text(f"Failed to download. HTTP Error {response.status}")
+                       return None
+                   
+                   # Get file size
+                   file_size = int(response.headers.get("Content-Length", 0))
+                   file_name = response.headers.get("Content-Disposition", "").split("filename=")[-1].strip('"')
+                   
+                   # Download with progress
+                   downloaded = 0
+                   chunks = []
+async for chunk in response.content.iter_chunked(1024):
+                       chunks.append(chunk)
+                       downloaded += len(chunk)
+                       progress = (downloaded / file_size) * 100
+     await message.edit_text(f"Downloading... {progress:.2f}%")
+                   
+                   # Combine chunks into a single file
+                   file_data = b"".join(chunks)
+                   return file_name, file_data
+                   
+       except Exception as e:
+      await message.reply_text(f"Error: {str(e)}")
+           return None
+
+
 async def process_download(client, query, url, filename):
     start_time = time.time()
     msg = await query.message.reply_text("⏳ Starting download...")
@@ -90,11 +134,11 @@ async def process_download(client, query, url, filename):
                         await msg.edit_text(f"⬇️ Downloading...\n{progress}")
                         last_update = current_time
                         
-            await msg.edit_text("📤 Uploading to Telegram...")
+      await msg.edit_text("📤 Uploading to Telegram...")
             thumbnail = await db.get_thumbnail(query.from_user.id)
             
             # Upload file with progress
-            await client.send_document(
+      await client.send_document(
                 chat_id=query.message.chat.id,
                 document=filename,
                 file_name=filename,
@@ -104,13 +148,13 @@ async def process_download(client, query, url, filename):
             )
             
     except Exception as e:
-        await msg.edit_text(f"❌ Download failed: {str(e)}")
+      await msg.edit_text(f"❌ Download failed: {str(e)}")
     finally:
         if os.path.exists(filename):
             os.remove(filename)
             
     except Exception as e:
-        await msg.edit_text(f"Download failed: {str(e)}")
+      await msg.edit_text(f"Download failed: {str(e)}")
     finally:
         if os.path.exists(filename):
             os.remove(filename)
@@ -119,7 +163,7 @@ async def process_download(client, query, url, filename):
 @Client.on_callback_query(filters.regex(r"^(default|rename)_"))
 async def handle_download_buttons(client, query):
     action, url = query.data.split('_', 1)
-    await query.answer()
+      await query.answer()
     
     # Store URL in global user_data
     user_id = query.from_user.id
@@ -133,9 +177,10 @@ async def handle_download_buttons(client, query):
         user_data[user_id]['awaiting_rename'] = True  # Track rename state
 
 @Client.on_message(filters.private & filters.text)
-async def handle_rename(client, message):
-    user_id = message.from_user.id
-    if user_data.get(user_id, {}).get('awaiting_rename'):
+   async def handle_url(client, message):
+       url = message.text
+       if "pixeldra.in" in url:
+           # Send a message with buttons (Default/Rename
         new_filename = message.text.strip()
         url = user_data[user_id]['url']
         await process_download(client, message, url, new_filename)
