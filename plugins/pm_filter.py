@@ -198,16 +198,17 @@ async def progress_bar(current, total, start_time):
     speed = current / elapsed_time if elapsed_time > 0 else 0
     eta = (total - current) / speed if speed > 0 else 0
     
-    percentage = current * 100 / total
-    filled_length = int(30 * current // total)
-    bar = '█' * filled_length + '—' * (30 - filled_length)
+    percentage = (current * 100) / total
+    filled = int(30 * (current / total))  # Number of "█" blocks
+    bar = '█' * filled + '░' * (30 - filled)  # █ for done, ░ for left
     
-    progress = f"""
-📦 Progress: [{bar}] {percentage:.1f}%
-📊 Size: {humanize.naturalsize(current)} / {humanize.naturalsize(total)}
-🚀 Speed: {humanize.naturalsize(speed)}/s
-⏳ ETA: {get_readable_time(eta)}
-"""
+    progress = (
+        f"`{bar}`\n"  # Progress bar
+        f"**Progress**: {percentage:.1f}%\n"  # Percentage
+        f"**Size**: {humanize.naturalsize(current)} / {humanize.naturalsize(total)}\n"  # Size
+        f"**Speed**: {humanize.naturalsize(speed)}/s\n"  # Speed
+        f"**ETA**: {get_readable_time(eta)}"  # Time left
+    )
     return progress
 
 
