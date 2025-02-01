@@ -4,7 +4,7 @@ import os        # For file operations
 import aiohttp
 import asyncio
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from upload import upload_file
+from url_upload import upload_file
 import time
 import asyncio
 import re
