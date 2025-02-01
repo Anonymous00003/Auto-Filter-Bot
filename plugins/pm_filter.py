@@ -256,19 +256,20 @@ async def group_search(client, message):
             return
         
         elif re.findall(r'https?://\S+|www\.\S+|t\.me/\S+', message.text):
-    url = message.text
-    keyboard = [
-        [
-            InlineKeyboardButton("Default Name", callback_data=f"default_{url}"),
-            InlineKeyboardButton("Rename File", callback_data=f"rename_{url}")
-        ]
-    ]
-    await message.reply_text(
-        "Choose download option:",
-        reply_markup=InlineKeyboardMarkup(keyboard)
-    )
+            url = message.text
+            keyboard = [
+                [
+                    InlineKeyboardButton("Default Name", callback_data=f"default_{url}"),
+                    InlineKeyboardButton("Rename File", callback_data=f"rename_{url}")
+                ]
+            ]
+            await message.reply_text(
+                "Choose download option:",
+                reply_markup=InlineKeyboardMarkup(keyboard)
+            )
 
         elif '@admin' in message.text.lower() or '@admins' in message.text.lower():
+            # ... rest of the code ...
             if await is_check_admin(client, message.chat.id, message.from_user.id):
                 return
             admins = []
