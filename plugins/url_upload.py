@@ -21,10 +21,16 @@ async def download_file(url, message):
                 await message.reply("Failed to download file. Invalid URL or server error.")
                 return None
 
+async def upload_file(client, file_path, chat_id, caption):
+    await client.send_document(
+        chat_id=chat_id,
+        document=file_path,
+        caption=caption
+    )
+
 @Client.on_message(filters.command("url") & (filters.private | filters.group))
 async def handle_url_upload(client, message: Message):
     try:
-        # Check if URL provided
         if len(message.command) < 2:
             await message.reply("❗ Please send command like: /url https://example.com/file.zip")
             return
@@ -32,15 +38,12 @@ async def handle_url_upload(client, message: Message):
         url = message.command[1]
         msg = await message.reply("⏳ Starting download...")
 
-        # Download file
         file_path = await download_file(url, message)
         if not file_path:
             return
 
-        # Ask for rename
         await msg.edit("✅ Download complete! Send me a new file name (or type /skip to keep original name)")
         
-        # Wait for rename input
         try:
             rename_msg = await client.listen.Message(
                 filters.text & filters.user(message.from_user.id),
@@ -53,15 +56,10 @@ async def handle_url_upload(client, message: Message):
         except Exception as e:
             await message.reply(f"⏱️ Rename timed out. Using original name: {os.path.basename(file_path)}")
 
-        # Upload to Telegram
         start_time = time.time()
-        await client.send_document(
-            chat_id=message.chat.id,
-            document=file_path,
-            caption=f"Uploaded via URL\n⏰ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-        )
+        caption = f"Uploaded via URL\n⏰ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        await upload_file(client, file_path, message.chat.id, caption)
         
-        # Cleanup and log
         os.remove(file_path)
         await msg.delete()
         await client.send_message(
