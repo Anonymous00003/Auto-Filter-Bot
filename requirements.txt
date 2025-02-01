@@ -25,3 +25,4 @@ speedtest-cli
 psutil
 shortzy
 aiohttp
+humanize
