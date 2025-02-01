@@ -83,7 +83,9 @@ async def download_file_with_progress(client, url, message):
     try:
         if "?download" not in url:
             url += "?download"
-        headers = { ... }  # Add your headers here
+        headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
+}  # Example headers
 
         async with aiohttp.ClientSession() as session:
             async with session.get(url, headers=headers) as response:
@@ -158,10 +160,14 @@ async def process_download(client, query, url, filename):
             os.remove(filename)  # Clean up the file
 
 
-@Client.on_callback_query(filters.regex(r"^(default|rename)_"))
-async def handle_download_buttons(client, query):
-    action, url = query.data.split('_', 1)
-    await query.answer()  # ✅ Correct indentation!
+@Client.on_callback_query(filters.regex(r"^next"))
+async def next_page(bot, query):
+    try:
+        ident, req, key, offset = query.data.split("_")
+    except ValueError:
+        await query.answer("Invalid callback data!", show_alert=True)
+        return
+    # Rest of the code...
     
     # Store URL in global user_data
     user_id = query.from_user.id
@@ -175,16 +181,22 @@ async def handle_download_buttons(client, query):
         user_data[user_id]['awaiting_rename'] = True  # Track rename state
 
 @Client.on_message(filters.private & filters.text)
-   async def handle_url(client, message):
-       url = message.text
-       if "pixeldra.in" in url:
-           # Send a message with buttons (Default/Rename
+async def handle_url(client, message):
+    user_id = message.from_user.id
+    if user_id not in user_data or 'awaiting_rename' not in user_data.get(user_id, {}):
+        return  # Exit if user isn't in rename state
+    
+    try:
         new_filename = message.text.strip()
         url = user_data[user_id]['url']
         await process_download(client, message, url, new_filename)
         # Reset user state
         del user_data[user_id]['awaiting_rename']
-        del user_data[user_id]['url']  # Add this line to fully reset
+        del user_data[user_id]['url']
+    except KeyError:
+        await message.reply_text("❌ Error: Session expired. Start over.")
+    except Exception as e:
+        await message.reply_text(f"❌ Error: {str(e)}")
 
 
 async def progress_bar(current, total, start_time):
