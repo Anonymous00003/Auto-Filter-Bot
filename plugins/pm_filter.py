@@ -122,7 +122,7 @@ async def download_file_with_progress(client, url, message):
 
 
 async def process_download(client, query, url, filename):
-    msg = await query.message.reply_text("⏳ Starting download...")
+    msg = await query.message.reply_text("вҸі Starting download...")
     try:
         # Use the new async download function
         result = await download_file_with_progress(client, url, msg)
@@ -136,7 +136,7 @@ async def process_download(client, query, url, filename):
             f.write(file_data)
 
         # Upload to Telegram with progress
-        await msg.edit_text("📤 Uploading to Telegram...")
+        await msg.edit_text("рҹ“Ө Uploading to Telegram...")
         thumbnail = await db.get_thumbnail(query.from_user.id)
         
         # Upload with progress bar
@@ -152,16 +152,10 @@ async def process_download(client, query, url, filename):
         await msg.delete()  # Delete progress message after upload
 
     except Exception as e:
-        await msg.edit_text(f"❌ Error: {str(e)}")
+        await msg.edit_text(f"вқҢ Error: {str(e)}")
     finally:
         if os.path.exists(filename):
             os.remove(filename)  # Clean up the file
-            
-    except Exception as e:
-      await msg.edit_text(f"Download failed: {str(e)}")
-    finally:
-        if os.path.exists(filename):
-            os.remove(filename)
 
 
 @Client.on_callback_query(filters.regex(r"^(default|rename)_"))
